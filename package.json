@@ -3,6 +3,6 @@
   "private": true,
   "scripts": {
     "prebuild": "node scripts/check-reserved-slugs.mjs",
-    "build": "echo \"Site statique, rien à compiler\""
+    "build": "echo \"Site statique servi depuis public/\""
   }
 }
