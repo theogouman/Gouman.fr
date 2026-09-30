@@ -1,0 +1,4 @@
+# Exports Taap.it : données personnelles de prospects, ne jamais commiter
+*.csv
+node_modules/
+.vercel/

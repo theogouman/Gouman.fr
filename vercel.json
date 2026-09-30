@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/:slug(2CXgGSy|3IAIzmk|7pL3BQg|B2B-lm1|B7YxkuE|BrWE4zH|Cngmy7h|FTYhxPC|Fr0rwsB|G5g3p90|JHrZsWH|Join|N1e5yHY|Notion-RGPD|Notion-club-lm1-bp|NotionApps|NotionRecovium|NpS6dYc|UsaK09Z|VVzTM8q|W4a64Zu|WeXZklo|X0lke5n|XTkVnyX|agents_ia|b2b-r1-cta1-rgpd|b2b-r1-cta2-rgpd|bKjlHAy|bXmrGyt|business-models-Notion|c329hID|candidater-notion-club-lm1|candidater_notion_club|confirmer_rdv|dataroom|e3X5tol|faire_comme_louis|faire_comme_maeva|faire_comme_nathan|feather|feedin|formules_timetracker|fwS9ekp|hyeres|instagram_|jHhBU0L|kxM45al|l4E86lN|linkedin_|livementor|louis_|mP48D5J|make_inscription|masterclass-notion|mon-linkedin|muiUuPD|n2yBqqD|nathan_podcast|notionclub_|notionclub_chatgpt|notionclub_claude|permissions_notion|ph993ph|prendre_rdv|rJ3MPjN|sH1gqqL|sssssp|structurer|systeme-io|tella-tv|temoignages_notionclub|timetracker|tinder|tuan-ly|whatsapp-theo|wmfKZTI|wq7U90u|yakoi|youtube_|zP8Iozw|zh6XwGX|zsymR9w)",
+      "destination": "https://hi.gouman.fr/:slug",
+      "permanent": true
+    }
+  ]
+}
