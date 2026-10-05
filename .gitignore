@@ -2,3 +2,9 @@
 *.csv
 node_modules/
 .vercel/
+.DS_Store
+
+# OTF SF Pro Display d'origine (~2 Mo) : gardés en local, jamais déployés.
+# Seuls les sous-ensembles woff2 de public/fonts/ partent en production ;
+# on les refabrique avec scripts/subset-fonts.py.
+/public/sf-pro-display/
