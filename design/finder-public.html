@@ -139,8 +139,59 @@
 
   /* Trop etroite pour les groupes d'actions : le Finder les replie derriere
      un chevron double, comme ici. */
-  .plus   { left: 359px; width: 36px; }
-  .search { left: 404px; width: 36px; }
+  .plus { left: 359px; width: 36px; }
+
+  /* ---------- Recherche ----------
+     La pastille de la loupe s'etire vers la gauche et devient un champ. Son
+     bord droit ne bouge pas : left et width varient ensemble, leur somme
+     reste a 440. C'est une animation de mise en page, mais sur un element
+     absolu de 36px de haut, isole dans son coin de la barre d'outils. */
+  .search {
+    left: 404px; width: 36px;
+    transition: left 340ms cubic-bezier(0.32, 0.72, 0, 1),
+                width 340ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .search.ouverte { left: 182px; width: 258px; }
+
+  /* La loupe reste calee a droite, elle ne bouge pas d'un pixel pendant que
+     la pastille s'ouvre : c'est elle qui donne l'impression du morphisme. */
+  .loupe {
+    position: absolute; right: 0; top: 0;
+    width: 36px; height: 36px;
+    border: 0; background: none;
+    color: inherit; cursor: pointer;
+  }
+  .loupe .ic { left: 18px; }
+
+  .champ {
+    position: absolute; left: 15px; right: 34px; top: 0;
+    height: 36px;
+    border: 0; background: none;
+    -webkit-appearance: none; appearance: none;
+    font: inherit; font-size: 13px;
+    color: var(--text);
+    opacity: 0; pointer-events: none;
+    transition: opacity 140ms linear;
+  }
+  /* Le texte n'arrive qu'une fois la pastille presque ouverte. */
+  .search.ouverte .champ {
+    opacity: 1; pointer-events: auto;
+    transition-delay: 140ms;
+  }
+  /* Seul endroit de la page ou l'on selectionne du texte. */
+  .champ { -webkit-user-select: text; user-select: text; }
+  .champ::placeholder { color: var(--text-3); }
+  .champ:focus { outline: none; }
+  .champ::-webkit-search-decoration,
+  .champ::-webkit-search-cancel-button { -webkit-appearance: none; }
+  /* Sous 16px, iOS zoome la page a la mise au point du champ. On ne paie ce
+     corps plus grand que la ou le probleme existe. */
+  .window.tactile .champ { font-size: 16px; }
+
+  /* Le titre et le groupe d'actions cedent la place au champ. */
+  .title, .plus { transition: opacity 200ms ease; }
+  .window.cherche .title,
+  .window.cherche .plus { opacity: 0; pointer-events: none; }
 
   /* ---------- Liste ---------- */
   .head {
@@ -226,6 +277,19 @@
     transition: transform 240ms cubic-bezier(0.32, 0.72, 0, 1);
   }
   .dossier[aria-expanded="false"] .disc { transform: rotate(0); }
+
+  /* Une ligne que la recherche ecarte quitte la liste : les suivantes
+     remontent, et la trame zebree reste accrochee a l'ecran. */
+  .row.filtre { display: none; }
+
+  .vide {
+    position: absolute; left: 0; right: 0; top: calc(2 * var(--rh));
+    text-align: center;
+    color: var(--text-3);
+    font-size: 12px;
+    display: none;
+  }
+  .window.sans-resultat .vide { display: block; }
 
   /* Replier un groupe fait remonter les lignes qui le suivent. A l'echelle
      reduite du mobile ce deplacement tombe entre deux pixels de l'ecran : le
@@ -369,8 +433,14 @@
       <svg class="ic" style="left:18px"><use href="#t-overflow"/></svg>
     </div>
 
-    <div class="glass search">
-      <svg class="ic" style="left:18px"><use href="#t-search"/></svg>
+    <div class="glass search" id="barre-recherche">
+      <input class="champ" id="finder-recherche" type="search" inputmode="search"
+             placeholder="Rechercher" autocomplete="off" autocorrect="off"
+             spellcheck="false" tabindex="-1" aria-label="Rechercher dans la liste">
+      <button class="loupe" type="button" aria-label="Rechercher"
+              aria-expanded="false" aria-controls="finder-recherche">
+        <svg class="ic"><use href="#t-search"/></svg>
+      </button>
     </div>
 
     <!-- En-têtes de colonnes -->
@@ -416,6 +486,8 @@
         <a class="row enfant" href="https://www.consultant-notion.fr" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-web"/></svg><span class="name">Structurer son entreprise avec Notion</span></a>
         <a class="row enfant" href="https://www.notionclub.fr" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-web"/></svg><span class="name">Devenir consultant Notion</span></a>
       </div>
+
+      <p class="vide">Aucun résultat</p>
 
     </div>
 
