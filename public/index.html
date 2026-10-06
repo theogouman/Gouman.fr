@@ -314,9 +314,13 @@
       --haut: clamp(20px, 2.5dvh, 48px);
       --haut-dispo: calc(100vh - var(--mains-h) - var(--bas) - 2 * var(--haut));
       --haut-dispo: calc(100dvh - var(--mains-h) - var(--bas) - 2 * var(--haut));
-      /* largeur commune au titre et a l'accroche : bornee par la largeur de
-         l'ecran, par un maximum, et par la hauteur qui reste au-dessus des mains */
-      --bloc: min(68.80vw, 960px, calc(var(--haut-dispo) * 3.3));
+      /* Largeur commune au titre et a l'accroche : bornee par la largeur de
+         l'ecran, par un maximum, et par la hauteur qui reste au-dessus des
+         mains. Le maximum de 480px est la taille retenue : c'est exactement
+         ce que donnait la page a 50 % de zoom navigateur, ou seul ce plafond
+         changeait de valeur physique. Mesure sur un 1440 x 900 : le bloc
+         passait de 757 a 480 px, les mains ne bougeaient pas. */
+      --bloc: min(68.80vw, 480px, calc(var(--haut-dispo) * 3.3));
       height: 100vh;
       height: 100dvh;
       padding-bottom: var(--bas);
