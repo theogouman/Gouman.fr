@@ -129,14 +129,6 @@
   }
   .nav .dim { color: #7c7c7c; }
 
-  .title {
-    position: absolute; left: 182px; top: 8.5px;
-    line-height: 36px;
-    font-size: 15px; font-weight: 700;
-    letter-spacing: -0.2px;
-    color: #f2f2f2;
-  }
-
   /* Trop etroite pour les groupes d'actions : le Finder les replie derriere
      un chevron double, comme ici. */
   .plus { left: 359px; width: 36px; }
@@ -188,9 +180,8 @@
      corps plus grand que la ou le probleme existe. */
   .window.tactile .champ { font-size: 16px; }
 
-  /* Le titre et le groupe d'actions cedent la place au champ. */
-  .title, .plus { transition: opacity 200ms ease; }
-  .window.cherche .title,
+  /* Le groupe d'actions cede la place au champ. */
+  .plus { transition: opacity 200ms ease; }
   .window.cherche .plus { opacity: 0; pointer-events: none; }
 
   /* ---------- Liste ---------- */
@@ -290,20 +281,6 @@
     display: none;
   }
   .window.sans-resultat .vide { display: block; }
-
-  /* Replier un groupe fait remonter les lignes qui le suivent. A l'echelle
-     reduite du mobile ce deplacement tombe entre deux pixels de l'ecran : le
-     navigateur repeint alors les icones a chaque image et elles vibrent.
-     Chaque ligne est donc promue sur sa propre couche le temps du repliement,
-     que le compositeur deplace telle quelle au lieu de la redessiner.
-     index.html pose .replie au clic et la retire une fois l'animation finie :
-     la promotion ne dure que ces 240 ms, et surtout elle n'est jamais presente
-     quand genie.js rasterise la fenetre, ou une transformation 3D dans un
-     foreignObject est un pari. */
-  .window.replie .row {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
 
   @media (prefers-reduced-motion: reduce) {
     .enfants,
@@ -426,8 +403,6 @@
       <span class="sep"></span>
       <svg class="ic dim" style="left:54px"><use href="#t-right"/></svg>
     </div>
-
-    <div class="title">public</div>
 
     <div class="glass plus">
       <svg class="ic" style="left:18px"><use href="#t-overflow"/></svg>

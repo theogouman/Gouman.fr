@@ -140,14 +140,6 @@
   }
   .finder-win .nav .dim { color: #7c7c7c; }
 
-  .finder-win .title {
-    position: absolute; left: 182px; top: 8.5px;
-    line-height: 36px;
-    font-size: 15px; font-weight: 700;
-    letter-spacing: -0.2px;
-    color: #f2f2f2;
-  }
-
   /* Trop etroite pour les groupes d'actions : le Finder les replie derriere
      un chevron double, comme ici. */
   .finder-win .plus { left: 359px; width: 36px; }
@@ -199,10 +191,8 @@
      corps plus grand que la ou le probleme existe. */
   .finder-win .window.tactile .champ { font-size: 16px; }
 
-  /* Le titre et le groupe d'actions cedent la place au champ. */
-  .finder-win .title,
+  /* Le groupe d'actions cede la place au champ. */
   .finder-win .plus { transition: opacity 200ms ease; }
-  .finder-win .window.cherche .title,
   .finder-win .window.cherche .plus { opacity: 0; pointer-events: none; }
 
   /* ---------- Liste ---------- */
@@ -302,20 +292,6 @@
     display: none;
   }
   .finder-win .window.sans-resultat .vide { display: block; }
-
-  /* Replier un groupe fait remonter les lignes qui le suivent. A l'echelle
-     reduite du mobile ce deplacement tombe entre deux pixels de l'ecran : le
-     navigateur repeint alors les icones a chaque image et elles vibrent.
-     Chaque ligne est donc promue sur sa propre couche le temps du repliement,
-     que le compositeur deplace telle quelle au lieu de la redessiner.
-     index.html pose .replie au clic et la retire une fois l'animation finie :
-     la promotion ne dure que ces 240 ms, et surtout elle n'est jamais presente
-     quand genie.js rasterise la fenetre, ou une transformation 3D dans un
-     foreignObject est un pari. */
-  .finder-win .window.replie .row {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
 
   @media (prefers-reduced-motion: reduce) {
     .finder-win .enfants,
@@ -493,10 +469,10 @@
         animation-duration: 1ms;
         animation-delay: 0ms;
       }
-      /* Les points de lumiere s'arretent la ou leur retard les place : la
-         plaque garde son modele, elle ne bouge plus. */
-      .lueur i { animation-play-state: paused; }
-      .dossier-bouton { transition: none; }
+      /* Les halos s'arretent la ou leur retard les place : la plaque garde
+         son modele, elle ne bouge plus. */
+      .pl-feu { animation-play-state: paused; }
+      .dossier-ascii { transition: none; }
     }
 
     .mains-boite {
@@ -519,125 +495,25 @@
       letter-spacing: 1.280px;
       font-variant-ligatures: none;
     }
-    /* ---------- Le dossier et sa plaque, cible de clic ----------
-       Le SVG des mains est aria-hidden : le dossier est un vrai bouton, pose
-       par dessus l'illustration a l'endroit du rectangle de reperage. Le
-       script recalque sa position et le cote du carre a chaque mise en page.
-       Tout le reste - le dossier, la lumiere - est exprime en pourcentage et
-       suit tout seul. */
+    /* ---------- Le dossier, cible de clic ----------
+       Le SVG des mains est aria-hidden : un vrai bouton, transparent, est pose
+       par dessus la plaque pour la souris, le clavier et les lecteurs d'ecran.
+       Il ne peint rien : si sa position prend une image de retard quand la
+       page bouge, cela ne se voit pas. Le dessin, lui, est dans le SVG. */
     .dossier-bouton {
-      /* absolute, pas fixed. La page ne defile pas, les deux donnent donc la
-         meme place ; mais une couche fixe est composite a part sur iOS, et
-         elle n'est pas redessinee quand on zoome a deux doigts : le dossier
-         s'y retrouve etire a la resolution d'avant, tout en escalier, pendant
-         que le texte autour reste net. En absolute il reste dans la couche de
-         la page et suit le zoom. */
       position: absolute;
       margin: 0;
       padding: 0;
       border: 0;
       background: none;
       cursor: pointer;
-      /* La proportion d'une icone macOS : un carre aux angles tres adoucis. */
       border-radius: 23%;
       z-index: 10;
       -webkit-tap-highlight-color: transparent;
-      /* La plaque est posee par le script, a partir du rectangle de reperage :
-         tant qu'il n'a pas mesure, elle n'a pas de place et ne se montre pas. */
-      opacity: 0;
-      transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1),
-                  opacity 320ms ease;
     }
-    .dossier-bouton.pret { opacity: 1; }
-    .dossier-bouton:hover { transform: scale(1.03); }
-    .dossier-bouton:active { transform: scale(0.98); }
-
-    /* Le verre. La teinte est franchement translucide : ce sont l'arete haute
-       allumee, le lisere et la lumiere qui circule dedans qui font lire la
-       matiere, pas un aplat blanc.
-
-       Pas de backdrop-filter, et c'est volontaire : il obligeait Safari a
-       composer la plaque sur une couche a part, et tout ce qui se peint
-       par-dessus - le dossier - y etait entraine. Cette couche n'est pas
-       redessinee quand on zoome a deux doigts sur iOS : l'icone s'y retrouvait
-       etiree a l'ancienne resolution. Derriere, le fond est noir : le flou
-       d'arriere-plan n'y montrait de toute facon presque rien. */
-    .plaque {
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      overflow: hidden;
-      background:
-        linear-gradient(158deg, rgba(255, 255, 255, 0.46), rgba(206, 227, 248, 0.2));
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.72),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.14),
-        inset 0 0 0 0.5px rgba(255, 255, 255, 0.34),
-        0 10px 30px rgba(0, 0, 0, 0.45);
-    }
-
-    /* La lumiere. Chaque point est un degre radial, donc doux par nature : pas
-       de filtre de flou, pas de mode de fusion, pas de transformation animee.
-       Aucune couche composite n'est creee sous le dossier, qui reste dessine
-       avec le reste de la page et suit donc le zoom. Ce sont les centres des
-       degrades qui se deplacent, par deux proprietes enregistrees. */
-    .lueur {
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      overflow: hidden;
-      opacity: 0.75;
-    }
-    .lueur .teinte-fond {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(70% 170% at 8% 115%, rgba(79, 166, 236, 0.5) 0%, transparent 62%),
-        radial-gradient(55% 150% at 44% 130%, rgba(79, 166, 236, 0.4) 0%, transparent 58%);
-    }
-    @property --lx { syntax: "<percentage>"; inherits: false; initial-value: 50%; }
-    @property --ly { syntax: "<percentage>"; inherits: false; initial-value: 50%; }
-    .lueur i {
-      position: absolute;
-      inset: 0;
-      /* Tout est en pourcentage : la lumiere garde ses proportions quelle que
-         soit la taille de la plaque, sans que le script ait a la regler. */
-      background: radial-gradient(ellipse var(--d) var(--d) at var(--lx) var(--ly),
-        rgba(79, 166, 236, var(--a)) 0%,
-        rgba(79, 166, 236, calc(var(--a) * 0.42)) 42%,
-        rgba(79, 166, 236, 0) 78%);
-      animation: tour var(--t) linear infinite;
-      animation-delay: var(--r);
-    }
-    /* Le tour de la plaque en huit points. Chaque lumiere le parcourt a sa
-       vitesse : leurs tours ne retombent jamais en phase, le motif ne se
-       repete pas. */
-    @keyframes tour {
-      0%     { --lx: 12%; --ly:  6%; }
-      12.5%  { --lx: 50%; --ly:  2%; }
-      25%    { --lx: 88%; --ly:  6%; }
-      37.5%  { --lx: 98%; --ly: 50%; }
-      50%    { --lx: 88%; --ly: 94%; }
-      62.5%  { --lx: 50%; --ly: 98%; }
-      75%    { --lx: 12%; --ly: 94%; }
-      87.5%  { --lx:  2%; --ly: 50%; }
-      100%   { --lx: 12%; --ly:  6%; }
-    }
-
-    /* 72 % : la plaque est donc 1,39 fois plus large que le dossier, qui garde
-       exactement la taille qu'il avait dans l'illustration. Le centrage est
-       calcule une fois pour toutes plutot que pose par une transformation, qui
-       serait un motif de plus de composer une couche a part.
-       Hauteur = 72 x 854/1004 = 61,247 %, d'ou le retrait en haut. */
-    .dossier-image {
-      position: absolute;
-      left: 14%;
-      top: 19.376%;
-      width: 72%;
-      height: auto;
-      aspect-ratio: 1004 / 854;
-      display: block;
-      pointer-events: none;
+    .dossier-bouton:focus-visible {
+      outline: 2px solid #73D7FF;
+      outline-offset: 6px;
     }
     .visuellement-cache {
       position: absolute;
@@ -647,25 +523,49 @@
       clip-path: inset(50%);
       white-space: nowrap;
     }
-    .dossier-bouton:focus-visible {
-      outline: 2px solid #73D7FF;
-      outline-offset: 6px;
-    }
 
-    /* Sur mobile le reperage gagne 8 %, et avec lui le dossier et sa plaque.
-       Les mains, elles, gardent leur taille : elles touchent les deux bords de
-       l'ecran et le SVG est en « meet », donc toute reduction de la boite les
-       decollerait des bords.
-       Le nom de la classe ne tient pas du detail : les lignes-dossiers du
-       Finder portent elles aussi « dossier », une regle non qualifiee les
-       attraperait. fill-box cale l'agrandissement sur le centre de l'image,
-       pas sur celui du viewBox. */
+    /* La plaque, la lumiere et le dossier forment un seul groupe du dessin :
+       l'echelle porte sur les trois a la fois. --pl-base est la taille au
+       repos, --pl-geste la reponse au survol et a l'appui.
+       Le bouton suit le groupe dans le DOM, pas l'inverse : d'ou le :has(). */
     .dossier-ascii {
+      --pl-base: 1;
+      --pl-geste: 1;
       transform-box: fill-box;
       transform-origin: 50% 50%;
+      transform: scale(calc(var(--pl-base) * var(--pl-geste)));
+      transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
     }
+    body:has(.dossier-bouton:hover) .dossier-ascii { --pl-geste: 1.03; }
+    body:has(.dossier-bouton:active) .dossier-ascii { --pl-geste: 0.97; }
+
+    /* Sur mobile la plaque gagne 8 %. Les mains, elles, gardent leur taille :
+       elles touchent les deux bords de l'ecran et le SVG est en « meet », donc
+       toute reduction de la boite les en decollerait. */
     @media (max-width: 700px) {
-      .dossier-ascii { transform: scale(1.08); }
+      .dossier-ascii { --pl-base: 1.08; }
+    }
+
+    /* Les quatre halos font le tour du contour de la plaque, chacun a sa
+       vitesse : leurs tours ne retombent jamais en phase, la lumiere ne se
+       repete pas. Ce sont leurs centres qui se deplacent - cx et cy, pas une
+       transformation : aucune couche composite n'est creee, et le dessin reste
+       net a tout agrandissement. */
+    .pl-feu {
+      fill: url(#pl-halo);
+      animation: tour var(--t) linear infinite;
+      animation-delay: var(--r);
+    }
+    @keyframes tour {
+      0%     { cx: 1952.1px; cy: 3714.5px; }
+      12.5%  { cx: 2121.0px; cy: 3696.8px; }
+      25%    { cx: 2289.9px; cy: 3714.5px; }
+      37.5%  { cx: 2334.3px; cy: 3910.1px; }
+      50%    { cx: 2289.9px; cy: 4105.7px; }
+      62.5%  { cx: 2121.0px; cy: 4123.4px; }
+      75%    { cx: 1952.1px; cy: 4105.7px; }
+      87.5%  { cx: 1907.7px; cy: 3910.1px; }
+      100%   { cx: 1952.1px; cy: 3714.5px; }
     }
 
     /* ---------- La fenetre Finder ---------- */
@@ -889,42 +789,59 @@
         </g>
       </g>
 
-      <!-- Le dossier n'est plus dessine ici : il est devenu un vrai element
-           HTML, pose sur sa plaque de verre (voir .dossier-bouton). Ce
-           rectangle sans peinture garde sa place dans l'illustration et sert
-           de reperage : c'est lui que le script mesure pour savoir ou poser
-           la plaque. Le cadre du dessin porte une marge interne (le dossier
-           occupe 32..972 sur 1004), d'ou des dimensions un peu plus grandes
-           que l'ecart entre les deux index. -->
-      <rect class="dossier-ascii" fill="none" pointer-events="none"
-            x="1961.0" y="3774.0" width="320.0" height="272.2"/>
-      </svg>
-    </div>
-  </div>
+      <!-- La plaque de verre et le dossier qu'elle porte, dessines dans
+           l'illustration elle-meme. C'est la le point : poses par un script,
+           ils se desynchronisaient des mains des que la page bougeait - au
+           zoom a deux doigts, ou quand la barre d'adresse de Safari change la
+           hauteur du viewport. Ici ils font partie du dessin, ils suivent donc
+           les mains par construction, sans une ligne de code.
+           Le bouton de clic reste en HTML, pose par dessus, mais il est
+           transparent : son retard eventuel ne se voit pas. -->
+      <g class="dossier-ascii">
+        <defs>
+          <linearGradient id="pl-verre" x1="2036.6" y1="3687.9" x2="2205.4" y2="4132.3" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFFFFF" stop-opacity=".46"/>
+            <stop offset="1" stop-color="#CEE3F8" stop-opacity=".2"/>
+          </linearGradient>
+          <radialGradient id="pl-halo" cx=".5" cy=".5" r=".5" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#4FA6EC" stop-opacity="1"/>
+            <stop offset=".42" stop-color="#4FA6EC" stop-opacity=".42"/>
+            <stop offset=".78" stop-color="#4FA6EC" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="pl-assise" cx=".18" cy="1.08" r=".85" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#4FA6EC" stop-opacity=".42"/>
+            <stop offset="1" stop-color="#4FA6EC" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="pl-eclat" x1="2058.8" y1="3687.9" x2="2343.2" y2="3847.9" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+            <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+          </linearGradient>
+          <clipPath id="pl-coupe">
+            <rect x="1898.78" y="3687.88" width="444.44" height="444.44" rx="102.22"/>
+          </clipPath>
+        </defs>
 
-  <!-- La plaque de verre et le dossier qu'elle porte. Tout le carre est la
-       cible de clic. Les quatre points de lumiere tournent le long de son
-       contour et se melangent en multiplie : sur un fond clair, c'est ce qui
-       donne la lueur diffuse qui se propage au lieu d'un simple clignotement. -->
-  <button class="dossier-bouton" id="dossier-bouton"
-          aria-haspopup="dialog" aria-expanded="false" aria-controls="finder-overlay">
-    <span class="plaque" aria-hidden="true">
-      <span class="lueur">
-        <span class="teinte-fond"></span>
-        <i style="--d: 62%; --a: .40; --t: 11s; --r: -0.4s"></i>
-        <i style="--d: 50%; --a: .32; --t: 17s; --r: -3.2s"></i>
-        <i style="--d: 74%; --a: .36; --t: 23s; --r: -10.8s"></i>
-        <i style="--d: 42%; --a: .28; --t: 13s; --r: -9.2s"></i>
-      </span>
-    </span>
-    <!-- Le dossier, en vecteur pur. Surtout pas d'image externe ni de filtre
-         SVG : un filtre est une operation sur des pixels, le navigateur
-         rasterise alors le dessin a la taille ou il le pose et agrandit
-         ensuite ce bitmap. C'est ce qui rendait l'icone floue des qu'on
-         zoomait, cernee du rectangle de la zone de filtre. Ici tout est trace
-         et degrade, redessine a la resolution demandee a chaque fois. -->
-    <svg class="dossier-image" viewBox="0 0 1004 854" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-    <defs>
+        <rect class="dossier-plaque" x="1898.78" y="3687.88" width="444.44" height="444.44" rx="102.22" fill="url(#pl-verre)"/>
+
+        <!-- La lumiere : quatre halos qui font le tour du contour, chacun a sa
+             vitesse. Leurs tours ne retombent jamais en phase. -->
+        <g clip-path="url(#pl-coupe)" opacity=".75">
+          <rect x="1898.78" y="3687.88" width="444.44" height="444.44" fill="url(#pl-assise)"/>
+        <circle class="pl-feu" r="275.6" cx="2121.0" cy="3910.1" opacity=".40" style="--t:11s;--r:-0.4s"/>
+        <circle class="pl-feu" r="222.2" cx="2121.0" cy="3910.1" opacity=".32" style="--t:17s;--r:-3.2s"/>
+        <circle class="pl-feu" r="328.9" cx="2121.0" cy="3910.1" opacity=".36" style="--t:23s;--r:-10.8s"/>
+        <circle class="pl-feu" r="186.7" cx="2121.0" cy="3910.1" opacity=".28" style="--t:13s;--r:-9.2s"/>
+        </g>
+
+        <!-- Le lisere complet, puis l'eclat, limite au coin superieur droit. -->
+        <rect x="1898.78" y="3687.88" width="444.44" height="444.44" rx="102.22"
+              fill="none" stroke="#FFFFFF" stroke-opacity=".18" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <path d="M2085.4 3687.88H2241.00A102.22 102.22 0 0 1 2343.22 3790.10V3963.4"
+              fill="none" stroke="url(#pl-eclat)" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+
+        <g transform="translate(1961.0 3774.0) scale(0.318725)">
+<defs>
     <linearGradient id="dos-rabat" x1="502" y1="16" x2="502" y2="854" gradientUnits="userSpaceOnUse"><stop stop-color="#57ADDB"/><stop offset=".229272" stop-color="#098DD6"/></linearGradient>
     <linearGradient id="dos-filet" x1="502" y1="136.5" x2="502" y2="202.5" gradientUnits="userSpaceOnUse"><stop stop-color="#003C5C"/><stop offset="1" stop-color="#003C5C" stop-opacity="0"/></linearGradient>
     <linearGradient id="dos-corps" x1="502" y1="150" x2="502" y2="806" gradientUnits="userSpaceOnUse"><stop stop-color="#73D7FF"/><stop offset="1" stop-color="#6BCBF3"/></linearGradient>
@@ -943,7 +860,15 @@
     <rect x="32" y="743" width="940" height="2" fill="#3C9FD0" fill-opacity=".3"/>
     <rect x="32" y="745" width="940" height="18" fill="#fff" fill-opacity=".14"/>
     </g>
-    </svg>
+        </g>
+      </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- La cible de clic, calee sur la plaque dessinee dans l'illustration. -->
+  <button class="dossier-bouton" id="dossier-bouton"
+          aria-haspopup="dialog" aria-expanded="false" aria-controls="finder-overlay">
     <span class="visuellement-cache">Ouvrir le dossier public</span>
   </button>
 
@@ -1051,8 +976,6 @@
               <svg class="ic dim" style="left:54px"><use href="#t-right"/></svg>
             </div>
 
-            <div class="title">public</div>
-
             <div class="glass plus">
               <svg class="ic" style="left:18px"><use href="#t-overflow"/></svg>
             </div>
@@ -1134,7 +1057,7 @@
   /* Ouverture et fermeture de la fenetre Finder. Le genie fait l'animation
      quand il le peut ; sinon les classes CSS suffisent a montrer et cacher. */
   document.addEventListener("DOMContentLoaded", function () {
-    var ancre = document.querySelector(".dossier-ascii");
+    var plaque = document.querySelector(".dossier-plaque");
     var bouton = document.getElementById("dossier-bouton");
     var overlay = document.getElementById("finder-overlay");
     var fenetre = overlay.querySelector(".finder-win");
@@ -1163,12 +1086,17 @@
       // de mesurer.
       cadre.classList.toggle("tactile", petit.matches);
 
-      // Le clavier mobile ne change pas innerHeight : il rogne le viewport
-      // visuel. On mesure donc sur celui-ci, et on recentre la fenetre sur ce
-      // qui reste a l'ecran plutot que de la laisser passer dessous.
+      // Le viewport visuel ne sert qu'a une chose : remonter la fenetre
+      // au-dessus du clavier. Il retrecit aussi quand la barre d'adresse de
+      // Safari va et vient, et quand on zoome a deux doigts - s'en servir
+      // alors remettrait la fenetre a l'echelle et la ferait glisser pour
+      // rien, ce qui se voit comme un saut puis un retour. Le seul cas qui
+      // nous interesse se reconnait sans ambiguite : notre champ a le focus.
       var vv = window.visualViewport;
-      var hDispo = vv ? vv.height : window.innerHeight;
-      var dy = vv ? vv.offsetTop + vv.height / 2 - window.innerHeight / 2 : 0;
+      var clavier =
+        vv && document.activeElement === champ && window.innerHeight - vv.height > 100;
+      var hDispo = clavier ? vv.height : window.innerHeight;
+      var dy = clavier ? vv.offsetTop + vv.height / 2 - window.innerHeight / 2 : 0;
       overlay.style.setProperty("--finder-dy", dy.toFixed(1) + "px");
 
       var w = fenetre.offsetWidth, h = fenetre.offsetHeight;
@@ -1190,16 +1118,13 @@
         if (crans >= 1) k = crans / grille;
         overlay.style.setProperty("--finder-k", k.toFixed(6));
       }
-      // La plaque est un carre centre sur le dossier. Le dossier y occupe
-      // 72 % de la largeur : le cote vaut donc sa largeur divisee par 0,72, et
-      // le dessin garde exactement la taille qu'il avait dans l'illustration.
-      var r = ancre.getBoundingClientRect();
-      var cote = r.width / 0.72;
-      bouton.style.left = r.left + (r.width - cote) / 2 + "px";
-      bouton.style.top = r.top + (r.height - cote) / 2 + "px";
-      bouton.style.width = cote + "px";
-      bouton.style.height = cote + "px";
-      bouton.classList.add("pret");
+      // Le bouton se cale sur la plaque telle qu'elle est dessinee. Il ne
+      // peint rien : c'est une zone de clic, pas un element de design.
+      var r = plaque.getBoundingClientRect();
+      bouton.style.left = r.left + "px";
+      bouton.style.top = r.top + "px";
+      bouton.style.width = r.width + "px";
+      bouton.style.height = r.height + "px";
     }
 
     function ouvrir() {
@@ -1318,21 +1243,21 @@
        a rien. Rendre la main a la liste complete pendant que le doigt est
        pose deplacerait la ligne visee avant que le clic n'arrive dessus. */
     var surLigne = false;
-    var fermeture;
     fenetre.addEventListener("pointerdown", function (e) {
       surLigne = !!e.target.closest(".row");
     });
-    champ.addEventListener("focus", function () {
-      clearTimeout(fermeture);
-      surLigne = false;
-    });
+    champ.addEventListener("focus", function () { surLigne = false; });
     champ.addEventListener("blur", function () {
-      clearTimeout(fermeture);
-      fermeture = setTimeout(function () {
-        if (surLigne) return;
-        if (document.activeElement === champ) return;
-        if (barre.classList.contains("ouverte")) chercher(false);
-      }, 250);
+      // Sans delai : surLigne est deja connu, puisque le pointerdown qui fait
+      // perdre le focus precede toujours le blur. Rien a attendre.
+      if (surLigne) return;
+      if (barre.classList.contains("ouverte")) chercher(false);
+    });
+    // Le clic sur un lien est passe : on peut refermer sans rien deplacer sous
+    // le doigt.
+    fenetre.addEventListener("click", function (e) {
+      var lien = e.target.closest("a.row");
+      if (lien && barre.classList.contains("ouverte")) chercher(false);
     });
     champ.addEventListener("input", function () {
       // genie.js rasterise la fenetre a partir de son outerHTML : sans
@@ -1343,7 +1268,7 @@
 
     // Toute retouche de la liste perime la texture du genie : on la refait une
     // fois les animations retombees.
-    var reprise, decolle;
+    var reprise;
     function retexturer() {
       if (!genie) return;
       genie.invalidate();
@@ -1358,15 +1283,6 @@
       var d = e.target.closest(".dossier");
       if (!d) return;
       var ouvre = d.getAttribute("aria-expanded") === "false";
-      // Les lignes passent sur leur propre couche pendant le repliement : sans
-      // cela, a l'echelle reduite du mobile, leurs icones vibrent a chaque
-      // image. La classe tombe des que l'animation est finie, bien avant que
-      // le genie ne reprenne sa texture.
-      cadre.classList.add("replie");
-      clearTimeout(decolle);
-      decolle = setTimeout(function () {
-        cadre.classList.remove("replie");
-      }, 300);
       d.setAttribute("aria-expanded", ouvre);
       // En repliant, le focus peut se retrouver sur un lien devenu invisible.
       if (!ouvre && d.nextElementSibling.contains(document.activeElement)) {
