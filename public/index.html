@@ -495,7 +495,7 @@
       }
       /* Les points de lumiere s'arretent la ou leur retard les place : la
          plaque garde son modele, elle ne bouge plus. */
-      .nappe i { animation-play-state: paused; }
+      .lueur i { animation-play-state: paused; }
       .dossier-bouton { transition: none; }
     }
 
@@ -522,8 +522,9 @@
     /* ---------- Le dossier et sa plaque, cible de clic ----------
        Le SVG des mains est aria-hidden : le dossier est un vrai bouton, pose
        par dessus l'illustration a l'endroit du rectangle de reperage. Le
-       script recalque sa position a chaque mise en page, et lui donne le cote
-       du carre ainsi que --k, l'echelle de la nappe de lumiere. */
+       script recalque sa position et le cote du carre a chaque mise en page.
+       Tout le reste - le dossier, la lumiere - est exprime en pourcentage et
+       suit tout seul. */
     .dossier-bouton {
       /* absolute, pas fixed. La page ne defile pas, les deux donnent donc la
          meme place ; mais une couche fixe est composite a part sur iOS, et
@@ -551,10 +552,16 @@
     .dossier-bouton:hover { transform: scale(1.03); }
     .dossier-bouton:active { transform: scale(0.98); }
 
-    /* Le verre. La teinte est franchement translucide : c'est le flou de ce
-       qu'il y a derriere, l'arete haute allumee et le liseré qui font lire la
-       matiere, pas un aplat blanc. Le degrade s'eclaircit vers le haut, comme
-       une plaque qui prend la lumiere par le dessus. */
+    /* Le verre. La teinte est franchement translucide : ce sont l'arete haute
+       allumee, le lisere et la lumiere qui circule dedans qui font lire la
+       matiere, pas un aplat blanc.
+
+       Pas de backdrop-filter, et c'est volontaire : il obligeait Safari a
+       composer la plaque sur une couche a part, et tout ce qui se peint
+       par-dessus - le dossier - y etait entraine. Cette couche n'est pas
+       redessinee quand on zoome a deux doigts sur iOS : l'icone s'y retrouvait
+       etiree a l'ancienne resolution. Derriere, le fond est noir : le flou
+       d'arriere-plan n'y montrait de toute facon presque rien. */
     .plaque {
       position: absolute;
       inset: 0;
@@ -562,8 +569,6 @@
       overflow: hidden;
       background:
         linear-gradient(158deg, rgba(255, 255, 255, 0.46), rgba(206, 227, 248, 0.2));
-      -webkit-backdrop-filter: blur(18px) saturate(190%) brightness(1.2);
-      backdrop-filter: blur(18px) saturate(190%) brightness(1.2);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.72),
         inset 0 -1px 0 rgba(255, 255, 255, 0.14),
@@ -571,69 +576,53 @@
         0 10px 30px rgba(0, 0, 0, 0.45);
     }
 
-    /* La lumiere. Le verre etant devenu translucide, donc sombre par endroits,
-       elle s'ajoute au lieu de se multiplier : elle eclaire la matiere, comme
-       une source prise dedans. */
+    /* La lumiere. Chaque point est un degre radial, donc doux par nature : pas
+       de filtre de flou, pas de mode de fusion, pas de transformation animee.
+       Aucune couche composite n'est creee sous le dossier, qui reste dessine
+       avec le reste de la page et suit donc le zoom. Ce sont les centres des
+       degrades qui se deplacent, par deux proprietes enregistrees. */
     .lueur {
       position: absolute;
       inset: 0;
       border-radius: inherit;
       overflow: hidden;
-      mix-blend-mode: screen;
-      opacity: 0.55;
+      opacity: 0.75;
     }
-    /* La nappe est dessinee dans un carre de 100 et mise a l'echelle : le
-       trace du contour, les diametres et le flou gardent ainsi leurs
-       proportions quelle que soit la taille de la plaque. */
-    .nappe {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100px;
-      height: 100px;
-      transform: scale(var(--k, 1));
-      transform-origin: 0 0;
-      filter: blur(17px);
-      /* Les lumieres restent accrochees aux bords : le milieu est le plus
-         transparent, comme dans la reference. */
-      -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.5) 46%, rgba(0, 0, 0, 0.5) 54%, #000 100%);
-      mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.5) 46%, rgba(0, 0, 0, 0.5) 54%, #000 100%);
-    }
-    .nappe .teinte-fond {
+    .lueur .teinte-fond {
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(70% 170% at 8% 115%, var(--teinte) 0%, transparent 62%),
-        radial-gradient(55% 150% at 44% 130%, var(--teinte) 0%, transparent 58%);
+        radial-gradient(70% 170% at 8% 115%, rgba(79, 166, 236, 0.5) 0%, transparent 62%),
+        radial-gradient(55% 150% at 44% 130%, rgba(79, 166, 236, 0.4) 0%, transparent 58%);
     }
-    .nappe i {
+    @property --lx { syntax: "<percentage>"; inherits: false; initial-value: 50%; }
+    @property --ly { syntax: "<percentage>"; inherits: false; initial-value: 50%; }
+    .lueur i {
       position: absolute;
-      left: 0;
-      top: 0;
-      width: var(--d);
-      height: var(--d);
-      border-radius: 50%;
-      background: var(--teinte);
-      opacity: var(--a);
-      display: none;
+      inset: 0;
+      /* Tout est en pourcentage : la lumiere garde ses proportions quelle que
+         soit la taille de la plaque, sans que le script ait a la regler. */
+      background: radial-gradient(ellipse var(--d) var(--d) at var(--lx) var(--ly),
+        rgba(79, 166, 236, var(--a)) 0%,
+        rgba(79, 166, 236, calc(var(--a) * 0.42)) 42%,
+        rgba(79, 166, 236, 0) 78%);
+      animation: tour var(--t) linear infinite;
+      animation-delay: var(--r);
     }
-    .dossier-bouton { --teinte: #4FA6EC; }
-
-    /* Les quatre points suivent le contour de la plaque, chacun a sa vitesse :
-       leurs tours ne retombent jamais en phase, la lumiere ne se repete pas.
-       Sans trajectoire CSS, seuls les deux degrades du fond subsistent. */
-    @supports (offset-path: path("M0 0")) {
-      .nappe i {
-        display: block;
-        offset-path: path("M23 0H77A23 23 0 0 1 100 23V77A23 23 0 0 1 77 100H23A23 23 0 0 1 0 77V23A23 23 0 0 1 23 0Z");
-        offset-rotate: 0deg;
-        animation: orbite var(--t) linear infinite,
-                   respire 7.4s ease-in-out infinite alternate;
-        animation-delay: var(--r), 0s;
-      }
+    /* Le tour de la plaque en huit points. Chaque lumiere le parcourt a sa
+       vitesse : leurs tours ne retombent jamais en phase, le motif ne se
+       repete pas. */
+    @keyframes tour {
+      0%     { --lx: 12%; --ly:  6%; }
+      12.5%  { --lx: 50%; --ly:  2%; }
+      25%    { --lx: 88%; --ly:  6%; }
+      37.5%  { --lx: 98%; --ly: 50%; }
+      50%    { --lx: 88%; --ly: 94%; }
+      62.5%  { --lx: 50%; --ly: 98%; }
+      75%    { --lx: 12%; --ly: 94%; }
+      87.5%  { --lx:  2%; --ly: 50%; }
+      100%   { --lx: 12%; --ly:  6%; }
     }
-    @keyframes orbite { to { offset-distance: 100%; } }
-    @keyframes respire { from { scale: 0.88; } to { scale: 1.14; } }
 
     .dossier-image {
       position: absolute;
@@ -917,13 +906,11 @@
           aria-haspopup="dialog" aria-expanded="false" aria-controls="finder-overlay">
     <span class="plaque" aria-hidden="true">
       <span class="lueur">
-        <span class="nappe">
-          <span class="teinte-fond"></span>
-          <i style="--d: 58px; --a: .68; --t: 11s; --r: -0.4s"></i>
-          <i style="--d: 44px; --a: .58; --t: 17s; --r: -3.2s"></i>
-          <i style="--d: 68px; --a: .62; --t: 23s; --r: -10.8s"></i>
-          <i style="--d: 36px; --a: .50; --t: 13s; --r: -9.2s"></i>
-        </span>
+        <span class="teinte-fond"></span>
+        <i style="--d: 62%; --a: .40; --t: 11s; --r: -0.4s"></i>
+        <i style="--d: 50%; --a: .32; --t: 17s; --r: -3.2s"></i>
+        <i style="--d: 74%; --a: .36; --t: 23s; --r: -10.8s"></i>
+        <i style="--d: 42%; --a: .28; --t: 13s; --r: -9.2s"></i>
       </span>
     </span>
     <img class="dossier-image" src="Folder.svg" alt="" aria-hidden="true">
@@ -1182,8 +1169,6 @@
       bouton.style.top = r.top + (r.height - cote) / 2 + "px";
       bouton.style.width = cote + "px";
       bouton.style.height = cote + "px";
-      // La nappe de lumiere est tracee dans un carre de 100.
-      bouton.style.setProperty("--k", (cote / 100).toFixed(4));
       bouton.classList.add("pret");
     }
 
