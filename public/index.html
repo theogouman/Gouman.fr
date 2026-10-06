@@ -525,7 +525,13 @@
        script recalque sa position a chaque mise en page, et lui donne le cote
        du carre ainsi que --k, l'echelle de la nappe de lumiere. */
     .dossier-bouton {
-      position: fixed;
+      /* absolute, pas fixed. La page ne defile pas, les deux donnent donc la
+         meme place ; mais une couche fixe est composite a part sur iOS, et
+         elle n'est pas redessinee quand on zoome a deux doigts : le dossier
+         s'y retrouve etire a la resolution d'avant, tout en escalier, pendant
+         que le texte autour reste net. En absolute il reste dans la couche de
+         la page et suit le zoom. */
+      position: absolute;
       margin: 0;
       padding: 0;
       border: 0;
@@ -1120,6 +1126,14 @@
     var genie = window.createGenie ? window.createGenie({ duration: 620 }) : null;
     var petit = window.matchMedia("(max-width: 700px)");
     var ouvert = false;
+    // De quoi savoir si le dernier geste venait du clavier ou du pointeur.
+    var auClavier = false;
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Tab" || e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+        auClavier = true;
+      }
+    }, true);
+    document.addEventListener("pointerdown", function () { auClavier = false; }, true);
 
     // La fenetre fait 449 x 319 : elle s'affiche a sa taille native, comme une
     // vraie fenetre, et ne retrecit que si l'ecran est plus petit qu'elle.
@@ -1196,7 +1210,10 @@
         if (barre.classList.contains("ouverte")) chercher(false);
         overlay.classList.remove("ouvert", "anime");
         overlay.setAttribute("aria-hidden", "true");
-        bouton.focus({ preventScroll: true });
+        // Rendre le focus au dossier n'a de sens que pour qui navigue au
+        // clavier. Apres un clic ou un appui, ca ne fait qu'allumer le lisere
+        // bleu autour de la plaque sans que personne ne l'ait demande.
+        if (auClavier) bouton.focus({ preventScroll: true });
       }
       if (!genie) return fin();
       overlay.classList.add("anime");
