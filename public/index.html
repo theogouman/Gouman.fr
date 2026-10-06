@@ -545,33 +545,36 @@
     .dossier-bouton:hover { transform: scale(1.03); }
     .dossier-bouton:active { transform: scale(0.98); }
 
-    /* Le verre : un fond clair translucide qui prend ce qu'il y a derriere,
-       un filet de lumiere sur l'arete haute, une ombre portee pour le decoller
-       du noir. */
+    /* Le verre. La teinte est franchement translucide : c'est le flou de ce
+       qu'il y a derriere, l'arete haute allumee et le liseré qui font lire la
+       matiere, pas un aplat blanc. Le degrade s'eclaircit vers le haut, comme
+       une plaque qui prend la lumiere par le dessus. */
     .plaque {
       position: absolute;
       inset: 0;
       border-radius: inherit;
       overflow: hidden;
       background:
-        linear-gradient(158deg, rgba(255, 255, 255, 0.92), rgba(231, 240, 250, 0.72));
-      -webkit-backdrop-filter: blur(14px) saturate(170%);
-      backdrop-filter: blur(14px) saturate(170%);
+        linear-gradient(158deg, rgba(255, 255, 255, 0.46), rgba(206, 227, 248, 0.2));
+      -webkit-backdrop-filter: blur(18px) saturate(190%) brightness(1.2);
+      backdrop-filter: blur(18px) saturate(190%) brightness(1.2);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.95),
-        inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
-        0 10px 30px rgba(0, 0, 0, 0.5);
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 0 0 0.5px rgba(255, 255, 255, 0.34),
+        0 10px 30px rgba(0, 0, 0, 0.45);
     }
 
-    /* La lumiere. Elle se multiplie au verre : sur un fond clair c'est ce qui
-       la fait teinter la matiere au lieu de se poser dessus. */
+    /* La lumiere. Le verre etant devenu translucide, donc sombre par endroits,
+       elle s'ajoute au lieu de se multiplier : elle eclaire la matiere, comme
+       une source prise dedans. */
     .lueur {
       position: absolute;
       inset: 0;
       border-radius: inherit;
       overflow: hidden;
-      mix-blend-mode: multiply;
-      opacity: 0.8;
+      mix-blend-mode: screen;
+      opacity: 0.55;
     }
     /* La nappe est dessinee dans un carre de 100 et mise a l'echelle : le
        trace du contour, les diametres et le flou gardent ainsi leurs
@@ -1096,10 +1099,6 @@
               <span class="crumb"><svg><use href="#p-users"/></svg>Utilisateurs</span>
               <svg class="chev"><use href="#p-chev"/></svg>
               <span class="crumb"><svg><use href="#p-home"/></svg>gouman</span>
-              <svg class="chev"><use href="#p-chev"/></svg>
-              <span class="crumb"><svg><use href="#p-folder"/></svg>Gouman.fr</span>
-              <svg class="chev"><use href="#p-chev"/></svg>
-              <span class="crumb"><svg><use href="#p-folder"/></svg>public</span>
             </div>
 
           </div>
@@ -1279,6 +1278,29 @@
 
     loupe.addEventListener("click", function () {
       chercher(!barre.classList.contains("ouverte"));
+    });
+
+    /* La barre ne survit pas a la perte du champ : refermer le clavier, ou
+       cliquer ailleurs, la referme. Une exception, et elle compte : si le
+       geste qui fait perdre le focus est un appui sur une ligne, on ne touche
+       a rien. Rendre la main a la liste complete pendant que le doigt est
+       pose deplacerait la ligne visee avant que le clic n'arrive dessus. */
+    var surLigne = false;
+    var fermeture;
+    fenetre.addEventListener("pointerdown", function (e) {
+      surLigne = !!e.target.closest(".row");
+    });
+    champ.addEventListener("focus", function () {
+      clearTimeout(fermeture);
+      surLigne = false;
+    });
+    champ.addEventListener("blur", function () {
+      clearTimeout(fermeture);
+      fermeture = setTimeout(function () {
+        if (surLigne) return;
+        if (document.activeElement === champ) return;
+        if (barre.classList.contains("ouverte")) chercher(false);
+      }, 250);
     });
     champ.addEventListener("input", function () {
       // genie.js rasterise la fenetre a partir de son outerHTML : sans
