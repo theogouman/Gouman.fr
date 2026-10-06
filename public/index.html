@@ -624,15 +624,19 @@
       100%   { --lx: 12%; --ly:  6%; }
     }
 
+    /* 72 % : la plaque est donc 1,39 fois plus large que le dossier, qui garde
+       exactement la taille qu'il avait dans l'illustration. Le centrage est
+       calcule une fois pour toutes plutot que pose par une transformation, qui
+       serait un motif de plus de composer une couche a part.
+       Hauteur = 72 x 854/1004 = 61,247 %, d'ou le retrait en haut. */
     .dossier-image {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      /* 72 % : la plaque est donc 1,39 fois plus large que le dossier, qui
-         garde exactement la taille qu'il avait dans l'illustration. */
+      left: 14%;
+      top: 19.376%;
       width: 72%;
       height: auto;
+      aspect-ratio: 1004 / 854;
+      display: block;
       pointer-events: none;
     }
     .visuellement-cache {
@@ -889,9 +893,9 @@
            HTML, pose sur sa plaque de verre (voir .dossier-bouton). Ce
            rectangle sans peinture garde sa place dans l'illustration et sert
            de reperage : c'est lui que le script mesure pour savoir ou poser
-           la plaque. Le cadre de Folder.svg porte une marge interne (le
-           dessin occupe 32..972 sur 1004), d'ou des dimensions un peu plus
-           grandes que l'ecart entre les deux index. -->
+           la plaque. Le cadre du dessin porte une marge interne (le dossier
+           occupe 32..972 sur 1004), d'ou des dimensions un peu plus grandes
+           que l'ecart entre les deux index. -->
       <rect class="dossier-ascii" fill="none" pointer-events="none"
             x="1961.0" y="3774.0" width="320.0" height="272.2"/>
       </svg>
@@ -913,7 +917,33 @@
         <i style="--d: 42%; --a: .28; --t: 13s; --r: -9.2s"></i>
       </span>
     </span>
-    <img class="dossier-image" src="Folder.svg" alt="" aria-hidden="true">
+    <!-- Le dossier, en vecteur pur. Surtout pas d'image externe ni de filtre
+         SVG : un filtre est une operation sur des pixels, le navigateur
+         rasterise alors le dessin a la taille ou il le pose et agrandit
+         ensuite ce bitmap. C'est ce qui rendait l'icone floue des qu'on
+         zoomait, cernee du rectangle de la zone de filtre. Ici tout est trace
+         et degrade, redessine a la resolution demandee a chaque fois. -->
+    <svg class="dossier-image" viewBox="0 0 1004 854" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <defs>
+    <linearGradient id="dos-rabat" x1="502" y1="16" x2="502" y2="854" gradientUnits="userSpaceOnUse"><stop stop-color="#57ADDB"/><stop offset=".229272" stop-color="#098DD6"/></linearGradient>
+    <linearGradient id="dos-filet" x1="502" y1="136.5" x2="502" y2="202.5" gradientUnits="userSpaceOnUse"><stop stop-color="#003C5C"/><stop offset="1" stop-color="#003C5C" stop-opacity="0"/></linearGradient>
+    <linearGradient id="dos-corps" x1="502" y1="150" x2="502" y2="806" gradientUnits="userSpaceOnUse"><stop stop-color="#73D7FF"/><stop offset="1" stop-color="#6BCBF3"/></linearGradient>
+    <linearGradient id="dos-creux" x1="502" y1="150" x2="502" y2="258" gradientUnits="userSpaceOnUse"><stop stop-color="#0585CD" stop-opacity=".32"/><stop offset="1" stop-color="#0585CD" stop-opacity="0"/></linearGradient>
+    <linearGradient id="dos-pied" x1="502" y1="806" x2="502" y2="700" gradientUnits="userSpaceOnUse"><stop stop-color="#3FA9DD" stop-opacity=".18"/><stop offset="1" stop-color="#3FA9DD" stop-opacity="0"/></linearGradient>
+    <clipPath id="dos-coupe"><rect x="32" y="150" width="940" height="656" rx="72"/></clipPath>
+    </defs>
+    <path d="M147.2 806H856.8C897.124 806 917.286 806 932.687 798.152C946.235 791.25 957.25 780.235 964.152 766.687C972 751.286 972 731.124 972 690.8V205.2C972 164.876 972 144.714 964.152 129.313C957.25 115.765 946.235 104.75 932.687 97.8475C917.286 90 897.124 90 856.8 90H467.5C446 90 418.5 88 391.5 67.5C364.5 47 387.5 64.5 359 42.5C330.5 20.5 315.966 16 291 16H147.2C106.876 16 86.7143 16 71.3127 23.8475C57.765 30.7504 46.7504 41.765 39.8475 55.3127C32 70.7143 32 90.8762 32 131.2V690.8C32 731.124 32 751.286 39.8475 766.687C46.7504 780.235 57.765 791.25 71.3127 798.152C86.7143 806 106.876 806 147.2 806Z" fill="url(#dos-rabat)"/>
+    <path d="M147.2 19H291C303.287 19 312.766 20.1074 322.62 23.8086C332.527 27.5297 343.01 33.9467 357.167 44.875C385.538 66.7753 362.72 49.4161 389.686 69.8896C417.475 90.9887 445.787 93 467.5 93H856.8C877.011 93 891.989 93.0021 903.845 93.9707C915.665 94.9365 924.118 96.8482 931.325 100.521C944.308 107.136 954.864 117.692 961.479 130.675C965.152 137.882 967.064 146.335 968.029 158.155C968.998 170.011 969 184.989 969 205.2V690.8C969 711.011 968.998 725.989 968.029 737.845C967.064 749.665 965.152 758.118 961.479 765.325C954.864 778.308 944.308 788.864 931.325 795.479C924.118 799.152 915.665 801.064 903.845 802.029C891.989 802.998 877.011 803 856.8 803H147.2C126.989 803 112.011 802.998 100.155 802.029C88.3347 801.064 79.8822 799.152 72.6748 795.479C59.6916 788.864 49.1358 778.308 42.5205 765.325C38.8482 758.118 36.9365 749.665 35.9707 737.845C35.0021 725.989 35 711.011 35 690.8V131.2C35 110.989 35.0021 96.0109 35.9707 84.1553C36.9365 72.3347 38.8482 63.8822 42.5205 56.6748C49.1358 43.6916 59.6916 33.1358 72.6748 26.5205C79.8822 22.8482 88.3347 20.9365 100.155 19.9707C112.011 19.0021 126.989 19 147.2 19Z" stroke="url(#dos-filet)" stroke-opacity=".07" stroke-width="6" fill="none"/>
+    <rect x="32" y="150" width="940" height="656" rx="72" fill="url(#dos-corps)"/>
+    <g clip-path="url(#dos-coupe)">
+    <rect x="32" y="150" width="940" height="108" fill="url(#dos-creux)"/>
+    <rect x="32" y="700" width="940" height="106" fill="url(#dos-pied)"/>
+    <rect x="32" y="706" width="940" height="2" fill="#3C9FD0" fill-opacity=".3"/>
+    <rect x="32" y="708" width="940" height="18" fill="#fff" fill-opacity=".14"/>
+    <rect x="32" y="743" width="940" height="2" fill="#3C9FD0" fill-opacity=".3"/>
+    <rect x="32" y="745" width="940" height="18" fill="#fff" fill-opacity=".14"/>
+    </g>
+    </svg>
     <span class="visuellement-cache">Ouvrir le dossier public</span>
   </button>
 
