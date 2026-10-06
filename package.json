@@ -2,7 +2,8 @@
   "name": "gouman.fr",
   "private": true,
   "scripts": {
-    "prebuild": "node scripts/check-reserved-slugs.mjs",
-    "build": "echo \"Site statique servi depuis public/\""
+    "prebuild": "node scripts/build-finder.mjs && node scripts/check-reserved-slugs.mjs",
+    "build": "echo \"Site statique servi depuis public/\"",
+    "finder": "node scripts/build-finder.mjs"
   }
 }

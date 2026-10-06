@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Genie — banc d'essai</title>
+
+<!-- La CSS du panneau est isolee dans sa propre feuille : genie.js la replaque
+     telle quelle dans le SVG de capture, elle ne doit donc dependre d'aucun
+     ancetre. C'est exactement la contrainte que respecte la maquette Finder. -->
+<style id="panel-css">
+  .panneau {
+    width: 480px;
+    height: 320px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #16181d;
+    box-shadow:
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.14),
+      0 24px 60px rgba(0, 0, 0, 0.45);
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #e8e8e8;
+  }
+  .panneau .barre {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 14px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .panneau .barre i { width: 11px; height: 11px; border-radius: 50%; }
+  .panneau .barre i:nth-child(1) { background: #ff5f57; }
+  .panneau .barre i:nth-child(2) { background: #febc2e; }
+  .panneau .barre i:nth-child(3) { background: #28c840; }
+  .panneau .corps { padding: 16px 18px; }
+  .panneau .corps p { margin: 0 0 9px; }
+  .panneau .corps b { color: #73d7ff; }
+  /* Une trame fine : elle rend visible tout cisaillement parasite du maillage. */
+  .panneau .trame {
+    margin-top: 12px;
+    height: 128px;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+</style>
+
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0b0c0e;
+    color: #cfcfcf;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .scene { position: fixed; inset: 0; display: grid; place-items: center; }
+
+  /* Les quatre icones, une par bord. */
+  .icone {
+    position: fixed;
+    width: 64px; height: 54px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(#7cc4f7, #3990dd);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+  .icone[aria-pressed="true"] { outline: 2px solid #fff; outline-offset: 3px; }
+  .icone.haut   { top: 24px;    left: 50%; transform: translateX(-50%); }
+  .icone.bas    { bottom: 24px; left: 50%; transform: translateX(-50%); }
+  .icone.gauche { left: 24px;   top: 50%;  transform: translateY(-50%); }
+  .icone.droite { right: 24px;  top: 50%;  transform: translateY(-50%); }
+
+  .cache { visibility: hidden; }
+
+  .reglages {
+    position: fixed;
+    left: 50%; bottom: 96px;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    white-space: nowrap;
+  }
+  .reglages input[type="range"] { width: 260px; }
+  .reglages output { min-width: 3.4em; }
+  .etat { color: #8e8e8e; }
+
+  .genie-canvas { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="panneau" id="panneau">
+    <div class="barre"><i></i><i></i><i></i></div>
+    <div class="corps">
+      <p>Banc d'essai de l'effet <b>Genie</b>.</p>
+      <p>Choisissez un bord, puis glissez le curseur.</p>
+      <div class="trame"></div>
+    </div>
+  </div>
+</div>
+
+<button class="icone haut"   data-bord="haut"   aria-pressed="false" aria-label="Aspirer vers le haut"></button>
+<button class="icone droite" data-bord="droite" aria-pressed="false" aria-label="Aspirer vers la droite"></button>
+<button class="icone bas"    data-bord="bas"    aria-pressed="false" aria-label="Aspirer vers le bas"></button>
+<button class="icone gauche" data-bord="gauche" aria-pressed="false" aria-label="Aspirer vers la gauche"></button>
+
+<div class="reglages">
+  <label>image par image <input type="range" id="curseur" min="0" max="1" step="0.002" value="0"></label>
+  <output id="valeur">0.000</output>
+  <span class="etat" id="etat">bord : bas</span>
+</div>
+
+<script src="../public/genie.js"></script>
+<script>
+(function () {
+  var panneau = document.getElementById("panneau");
+  var css = document.getElementById("panel-css").textContent;
+  var curseur = document.getElementById("curseur");
+  var valeur = document.getElementById("valeur");
+  var etat = document.getElementById("etat");
+  var genie = createGenie({ duration: 620 });
+  var icones = [].slice.call(document.querySelectorAll(".icone"));
+  var actif = document.querySelector(".icone.bas");
+  var ouvert = true;
+
+  function rect() { return actif.getBoundingClientRect(); }
+
+  function choisir(btn) {
+    actif = btn;
+    icones.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b === btn));
+    });
+    etat.textContent = "bord : " + btn.dataset.bord;
+  }
+
+  icones.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      choisir(btn);
+      curseur.value = ouvert ? 0 : 1;
+      majValeur();
+      // Un clic bascule : la fenetre s'aspire dans l'icone ou en ressort.
+      panneau.classList.add("cache");
+      var p = ouvert
+        ? genie.close(panneau, rect(), css)
+        : genie.open(panneau, rect(), css);
+      ouvert = !ouvert;
+      p.then(function (ok) {
+        if (!ok) etat.textContent = "genie indisponible (repli CSS)";
+        panneau.classList.toggle("cache", !ouvert);
+        curseur.value = ouvert ? 0 : 1;
+        majValeur();
+      });
+    });
+  });
+
+  function majValeur() { valeur.textContent = Number(curseur.value).toFixed(3); }
+
+  curseur.addEventListener("input", function () {
+    majValeur();
+    panneau.classList.add("cache");
+    ouvert = Number(curseur.value) < 0.5;
+    genie.seek(panneau, rect(), css, Number(curseur.value));
+  });
+
+  choisir(actif);
+  genie.prime(panneau, css);
+  window.addEventListener("resize", function () {
+    genie.settle();
+    genie.invalidate();
+  });
+})();
+</script>
+</body>
+</html>

@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Théo Gouman — Building the ops systems companies run on</title>
+  <title>Théo Gouman</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="180x180" href="favicon-180.png">
+  <link rel="apple-touch-icon" href="favicon-180.png">
   <meta name="description" content="Théo Gouman — Building the ops systems companies run on">
   <meta name="theme-color" content="#000000">
   <meta property="og:title" content="Théo Gouman">
@@ -15,6 +18,225 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@700&text=%20%23%2B%2C.07%3A%3D%3F%40Ios~&display=swap" rel="stylesheet">
   <link rel="preload" as="font" type="font/woff2" crossorigin
         href="fonts/sf-pro-display-bold.woff2">
+  <script src="genie.js" defer></script>
+  <style id="finder-css">
+    /* finder:css:start */
+
+  /* ============================================================
+     Fenêtre Finder macOS (Liquid Glass, sombre)
+     Unité de base : 1px = 1pt macOS. Taille réelle : 449 × 319.
+     Les colonnes Taille et Type gardent leurs coordonnées d'origine (447 et
+     544) : à cette largeur elles tombent au-delà du bord et sont rognées,
+     exactement comme le Finder le fait quand on retrécit la fenêtre.
+     Changez --scale pour agrandir sans perte de netteté.
+     ============================================================ */
+  .finder-win {
+    --scale: 2;
+
+    --win-bg: #1e1e1e;
+    --glass-bg: rgba(255, 255, 255, 0.075);
+    --glass-pill: rgba(255, 255, 255, 0.13);
+    --stripe: rgba(255, 255, 255, 0.04);
+    --select: #2a5bd2;
+
+    --text: #ececec;
+    --text-2: #c9c9c9;
+    --text-3: #8d8d8d;
+    --icon: #e6e6e6;
+    --hairline: rgba(255, 255, 255, 0.09);
+
+    --font: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+            "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .finder-win,
+
+  .finder-win * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* Mise en page de cette page de previsualisation uniquement : le scopeur de
+     scripts/build-finder.mjs jette cette regle lors de l'injection dans le site. */
+
+  /* ---------- Fenêtre ---------- */
+  .finder-win .window {
+    position: relative;
+    width: 449px;
+    height: 319px;
+    border-radius: 28px;
+    background: var(--win-bg);
+    overflow: hidden;
+    color: var(--text);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    font-size: 13px;
+    letter-spacing: -0.08px;
+    user-select: none;
+    box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.55),
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.16),
+      0 24px 60px rgba(0, 0, 0, 0.32),
+      0 8px 20px rgba(0, 0, 0, 0.22);
+  }
+
+  .finder-win svg { display: block; overflow: visible; }
+
+  .finder-win .traffic {
+    position: absolute;
+    top: 19.5px; left: 19px;
+    display: flex; gap: 9px;
+    z-index: 5;
+  }
+  .finder-win .traffic span {
+    width: 14px; height: 14px; border-radius: 50%;
+    box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.18);
+  }
+  .finder-win .traffic .r { background: #ff5f57; }
+  .finder-win .traffic .y { background: #febc2e; }
+  .finder-win .traffic .g { background: #28c840; }
+
+  /* ---------- Toolbar ---------- */
+  .finder-win .glass {
+    position: absolute;
+    top: 8.5px; height: 36px;
+    border-radius: 18px;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow:
+      inset 0 0.5px 0 rgba(255, 255, 255, 0.2),
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.07),
+      0 0 0 0.5px rgba(0, 0, 0, 0.35),
+      0 1px 4px rgba(0, 0, 0, 0.25);
+    color: var(--icon);
+  }
+  .finder-win .glass .ic {
+    position: absolute; top: 8px;
+    width: 20px; height: 20px;
+    transform: translateX(-50%);
+  }
+
+  .finder-win .nav { left: 96px; width: 73px; }
+  .finder-win .nav .sep {
+    position: absolute; left: 36.5px; top: 10px;
+    width: 0.5px; height: 16px; background: rgba(255, 255, 255, 0.14);
+  }
+  .finder-win .nav .dim { color: #7c7c7c; }
+
+  .finder-win .title {
+    position: absolute; left: 182px; top: 8.5px;
+    line-height: 36px;
+    font-size: 15px; font-weight: 700;
+    letter-spacing: -0.2px;
+    color: #f2f2f2;
+  }
+
+  /* Trop etroite pour les groupes d'actions : le Finder les replie derriere
+     un chevron double, comme ici. */
+  .finder-win .plus { left: 359px; width: 36px; }
+  .finder-win .search { left: 404px; width: 36px; }
+
+  /* ---------- Liste ---------- */
+  .finder-win .head {
+    position: absolute; left: 0; right: 0; top: 56px;
+    height: 24px;
+    border-bottom: 0.5px solid var(--hairline);
+    font-size: 12px;
+  }
+  .finder-win .head span { position: absolute; top: 0; line-height: 19px; }
+  .finder-win .head .h-name { left: 48px; font-weight: 600; color: var(--text); }
+  .finder-win .head .h-size { left: 447px; font-weight: 500; color: var(--text-3); }
+  .finder-win .head .h-type { left: 544px; font-weight: 500; color: var(--text-3); }
+  .finder-win .head .sort { left: 422px; top: 5.5px; color: var(--text-3); }
+  .finder-win .head .div {
+    position: absolute; top: 2px; width: 0.5px; height: 15px;
+    background: rgba(255, 255, 255, 0.13);
+  }
+
+  /* La trame alternee est peinte par un degrade repete sur la liste, pas par
+     les lignes : elle reste ainsi accrochee a la position a l'ecran, comme
+     dans le Finder, y compris pendant qu'un dossier se replie. */
+  .finder-win .rows {
+    position: absolute; left: 0; right: 0; top: 85.5px;
+    height: 200px;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 20px,
+      var(--stripe) 20px 40px);
+  }
+
+  .finder-win .row {
+    position: relative;
+    display: block;
+    width: 100%;
+    border: 0;
+    background: none;
+    font: inherit;
+    height: 20px; line-height: 20px;
+    border-radius: 6px;
+    color: var(--text);
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .finder-win .row:hover { background: rgba(255, 255, 255, 0.08); }
+  .finder-win .row:active,
+  .finder-win .row:focus-visible { background: var(--select); outline: none; }
+  .finder-win .row:active .name,
+  .finder-win .row:focus-visible .name { color: #fff; }
+
+  .finder-win .row .disc { position: absolute; left: 16px; top: 5px; width: 7px; height: 10px; color: #b5b5b5; }
+  .finder-win .row .ficon { position: absolute; left: 27px; top: 2px; width: 16px; height: 16px; }
+  /* top explicite : sans lui le nom se poserait a sa position statique,
+     qui depend du formatage du markup de la ligne. */
+  .finder-win .row .name { position: absolute; left: 48px; top: 0; color: var(--text); }
+
+  /* Un cran d'indentation pour le contenu d'un dossier. */
+  .finder-win .row.enfant .ficon { left: 43px; }
+  .finder-win .row.enfant .name { left: 64px; }
+
+  /* Repliement : chaque ligne fait 20px, la hauteur du groupe est donc connue
+     et animable. Le triangle pivote en meme temps, comme dans le Finder. */
+  .finder-win .enfants {
+    overflow: hidden;
+    height: calc(var(--n) * 20px);
+    visibility: visible;
+    transition: height 240ms cubic-bezier(0.32, 0.72, 0, 1), visibility 0s;
+  }
+  /* visibility bascule une fois le repliement fini : les liens caches sortent
+     ainsi de l'ordre de tabulation, sans disparaitre pendant l'animation. */
+  .finder-win .dossier[aria-expanded="false"] + .enfants {
+    height: 0;
+    visibility: hidden;
+    transition: height 240ms cubic-bezier(0.32, 0.72, 0, 1), visibility 0s 240ms;
+  }
+
+  .finder-win .dossier .disc {
+    transform: rotate(90deg);
+    transform-origin: 50% 50%;
+    transition: transform 240ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .finder-win .dossier[aria-expanded="false"] .disc { transform: rotate(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .finder-win .enfants,
+    .finder-win .dossier .disc { transition: none; }
+  }
+
+  /* ---------- Barre de chemin ---------- */
+  .finder-win .pathbar {
+    position: absolute; left: 0; right: 0; top: 291.5px; bottom: 0;
+    border-top: 0.5px solid var(--hairline);
+    display: flex; align-items: center;
+    padding-left: 14px;
+    font-size: 11.5px;
+    color: #b4b4b4;
+  }
+  .finder-win .crumb { display: flex; align-items: center; gap: 5px; }
+  .finder-win .crumb svg { width: 12px; height: 12px; }
+  .finder-win .chev { width: 6px; height: 8px; margin: 0 5px 0 5px; color: #8a8a8a; }
+
+    /* finder:css:end */
+  </style>
   <style>
     @font-face {
       font-family: "SF Pro Display";
@@ -45,29 +267,36 @@
     .scene {
       --marge: clamp(14px, 3.2vw, 60px);
       /* les mains ne touchent plus le bas de l'ecran */
-      --bas: 5vh;
-      --bas: 5dvh;
-      /* pleine largeur tant que la hauteur le permet, sinon rognees en haut */
-      --mains-h: min(41.5757vw, 55vh);
-      --mains-h: min(41.5757vw, 55dvh);
-      --haut: 2.5vh;
-      --haut: 2.5dvh;
+      --bas: 3vh;
+      --bas: 3dvh;
+      /* Pleine largeur : la hauteur des mains en decoule, et c'est le titre qui
+         cede la place. Le plafond ne mord que sur les fenetres tres plates
+         (au-dela de 1.88:1), ou les mains retrecissent au lieu d'etre rognees. */
+      --mains-h: min(41.5757vw, 78vh);
+      --mains-h: min(41.5757vw, 78dvh);
+      --haut: clamp(20px, 2.5vh, 48px);
+      --haut: clamp(20px, 2.5dvh, 48px);
       --haut-dispo: calc(100vh - var(--mains-h) - var(--bas) - 2 * var(--haut));
       --haut-dispo: calc(100dvh - var(--mains-h) - var(--bas) - 2 * var(--haut));
       /* largeur commune au titre et a l'accroche : bornee par la largeur de
          l'ecran, par un maximum, et par la hauteur qui reste au-dessus des mains */
-      --bloc: min(86vw, 1200px, calc(var(--haut-dispo) * 3.3592));
-      position: relative;
+      --bloc: min(68.80vw, 960px, calc(var(--haut-dispo) * 3.3));
       height: 100vh;
       height: 100dvh;
+      padding-bottom: var(--bas);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
+    /* Le texte et les mains forment un bloc : les mains sont donc toujours
+       posees juste sous le texte, et c'est le vide qui se repartit autour.
+       Sur mobile, ou les mains sont bridees par la largeur, elles remontent
+       ainsi avec le texte au lieu de rester collees en bas. */
     .texte-boite {
-      position: absolute;
-      inset: 0 0 calc(var(--mains-h) + var(--bas)) 0;
+      flex: 0 0 auto;
       padding: var(--haut) var(--marge);
       display: flex;
-      align-items: center;
       justify-content: center;
     }
 
@@ -155,10 +384,7 @@
     }
 
     .mains-boite {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: var(--bas);
+      flex: 0 0 auto;
       height: var(--mains-h);
       overflow: hidden;
     }
@@ -177,6 +403,85 @@
       letter-spacing: 1.280px;
       font-variant-ligatures: none;
     }
+    /* ---------- Le dossier, cible de clic ----------
+       Le SVG des mains est aria-hidden : un vrai bouton est donc pose par
+       dessus l'image du dossier, pour le clavier et les lecteurs d'ecran.
+       Sa position est recalquee sur celle de l'image a chaque mise en page. */
+    .dossier-bouton {
+      position: fixed;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      border-radius: 12px;
+      z-index: 10;
+    }
+    .visuellement-cache {
+      position: absolute;
+      width: 1px; height: 1px;
+      margin: -1px; padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .dossier-bouton:focus-visible {
+      outline: 2px solid #73D7FF;
+      outline-offset: 6px;
+    }
+
+    /* ---------- La fenetre Finder ---------- */
+    .finder-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(0, 0, 0, 0.55);
+      -webkit-backdrop-filter: blur(20px) saturate(125%);
+      backdrop-filter: blur(20px) saturate(125%);
+      /* Fermee, elle reste mise en page : le genie doit pouvoir mesurer et
+         rasteriser la fenetre avant le premier clic. Seuls l'affichage et les
+         clics sont coupes. */
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 400ms ease, visibility 0s linear 400ms;
+    }
+    .finder-overlay.ouvert {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 400ms ease;
+    }
+
+    /* Centrage par translation plutot que par grille : la boite de mise en
+       page garde sa taille d'origine meme reduite, et une grille devrait alors
+       centrer un element plus large qu'elle. Ici le centre tombe toujours au
+       bon endroit, quelle que soit l'echelle. */
+    .finder-win {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: max-content;
+      transform: translate(-50%, -50%) scale(var(--finder-k, 1));
+      transition: transform 260ms ease, opacity 260ms ease;
+    }
+    /* Repli quand le genie ne tourne pas (WebGL absent, capture ratee,
+       prefers-reduced-motion) : un simple fondu avec un leger retrait. */
+    .finder-overlay:not(.ouvert):not(.anime) .finder-win {
+      transform: translate(-50%, -50%) scale(calc(var(--finder-k, 1) * 0.92));
+      opacity: 0;
+    }
+    /* Pendant le genie, la fenetre est dessinee par le canvas. */
+    .finder-overlay.anime .finder-win { visibility: hidden; }
+
+    .genie-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 45;
+      pointer-events: none;
+      opacity: 0;
+    }
+
     #mains .t0 { fill: #9A978F; }
     #mains .t1 { fill: #BAB7B0; }
     #mains .t2 { fill: #E4E1DA; }
@@ -197,7 +502,7 @@
          pour que son index passe juste au-dessus de celui de la main droite. -->
     <div class="mains-boite">
       <svg class="mains" width="3918.3" height="1629.1" viewBox="100.6 3046.439 3918.3 1629.061"
-           preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+           preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
       <g id="mains" xml:space="preserve">
         <g class="main-gauche" transform="translate(0 -132.461)">
           <text x="480.30" y="3193.20" textLength="35.47" lengthAdjust="spacing"><tspan class="t0">,..</tspan></text>
@@ -343,8 +648,385 @@
           <text x="2881.00" y="4672.35" textLength="194.70" lengthAdjust="spacing"><tspan class="t0">.,::::::,::~~::,</tspan></text>
         </g>
       </g>
+
+      <!-- Le dossier, pose dans l'intervalle entre les deux index. Le cadre de
+           Folder.svg porte une marge interne (le dessin occupe 32..972 sur
+           1004), d'ou les dimensions un peu plus grandes que l'ecart lui-meme. -->
+      <image class="dossier" href="Folder.svg"
+             x="1961.0" y="3774.0" width="320.0" height="272.2"/>
       </svg>
     </div>
   </div>
+
+  <button class="dossier-bouton" id="dossier-bouton"
+          aria-haspopup="dialog" aria-expanded="false" aria-controls="finder-overlay">
+    <span class="visuellement-cache">Ouvrir le dossier public</span>
+  </button>
+
+  <div class="finder-overlay" id="finder-overlay" role="dialog" aria-modal="true"
+       aria-label="Fenetre Finder du dossier public" aria-hidden="true">
+    <div class="finder-win">
+      <!-- finder:markup:start -->
+        <!-- ================== Bibliothèque d'icônes ================== -->
+        <svg width="0" height="0" style="position:absolute">
+          <defs>
+            <linearGradient id="folderFront" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#7cc4f7"/>
+              <stop offset="1" stop-color="#4fa6ec"/>
+            </linearGradient>
+            <linearGradient id="folderBack" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#4aa2e8"/>
+              <stop offset="1" stop-color="#3990dd"/>
+            </linearGradient>
+            <linearGradient id="hdd" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#d9d9d9"/>
+              <stop offset="1" stop-color="#9c9c9c"/>
+            </linearGradient>
+            <!-- Sidebar -->
+            <!-- Toolbar -->
+            <symbol id="t-left" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.6 3.8 6.6 10l6 6.2"/></symbol>
+            <symbol id="t-right" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7.4 3.8 6 6.2-6 6.2"/></symbol>
+            <!-- Reseaux et liens : logos de marque, poses tels quels. Les identifiants
+                 de degrade sont prefixes pour ne pas se marcher dessus. -->
+            <symbol id="f-whatsapp" viewBox="0 0 512 512">
+              <path d="m143.8 431.2 7.7 4.5c32.2 19.1 69.2 29.2 106.8 29.2h.1c115.7 0 209.8-94.1 209.9-209.8 0-56.1-21.8-108.8-61.4-148.4-39.3-39.5-92.7-61.7-148.4-61.5-115.8 0-209.9 94.1-210 209.8-.1 39.5 11.1 78.2 32.1 111.7l5 7.9L64.4 452zM3.7 512l35.8-130.8C17.5 342.9 5.8 299.5 5.9 255 5.9 115.8 119.2 2.6 258.4 2.6c67.5 0 130.9 26.3 178.6 74s73.9 111.1 73.9 178.6c-.1 139.2-113.3 252.4-252.5 252.4h-.1c-42.3 0-83.8-10.6-120.7-30.7z" style="fill:#b3b3b3"/>
+              <path d="M1.1 509.4 37 378.6C14.8 340.2 3.2 296.7 3.3 252.4 3.3 113.2 116.6 0 255.8 0c67.5 0 130.9 26.3 178.6 74s73.9 111.1 73.9 178.6C508.2 391.8 394.9 505 255.8 505h-.1c-42.3 0-83.8-10.6-120.7-30.7z" style="fill:#fff"/>
+              <linearGradient id="wa-a" x1="254.666" x2="256.793" y1="446.637" y2="87.926" gradientTransform="matrix(1 0 0 -1 0 514.448)" gradientUnits="userSpaceOnUse"><stop offset="0" style="stop-color:#57d163"/><stop offset="1" style="stop-color:#23b33a"/></linearGradient>
+              <path d="M255.8 42.6c-115.8 0-209.9 94.1-210 209.8 0 39.5 11.2 78.2 32.2 111.7l5 7.9-21.2 77.4 79.4-20.8 7.7 4.5c32.2 19.1 69.2 29.2 106.8 29.2h.1c115.7 0 209.8-94.1 209.9-209.8.2-55.7-21.9-109.1-61.4-148.4-39.3-39.4-92.8-61.6-148.5-61.5" style="fill:url(#wa-a)"/>
+              <path d="M192.7 146.9c-4.7-10.5-9.7-10.7-14.2-10.9l-12.1-.1c-4.2 0-11 1.6-16.8 7.9s-22.1 21.6-22.1 52.6 22.6 61 25.8 65.2 43.6 69.9 107.8 95.2c53.3 21 64.1 16.8 75.7 15.8 11.6-1.1 37.3-15.3 42.6-30s5.3-27.4 3.7-30-5.8-4.2-12.1-7.4-37.3-18.4-43.1-20.5-10-3.2-14.2 3.2c-4.2 6.3-16.3 20.5-20 24.7s-7.4 4.7-13.7 1.6c-6.3-3.2-26.6-9.8-50.7-31.3-18.8-16.7-31.4-37.4-35.1-43.7s-.4-9.7 2.8-12.9c2.8-2.8 6.3-7.4 9.5-11.1s4.2-6.3 6.3-10.5 1.1-7.9-.5-11.1c-1.8-3-14-34.2-19.6-46.7" style="fill-rule:evenodd;clip-rule:evenodd;fill:#fff"/>
+            </symbol>
+            <symbol id="f-linkedin" viewBox="0 0 512 512">
+              <path d="M56.9 512h398.2c31.4 0 56.9-25.5 56.9-56.9V56.9C512 25.5 486.5 0 455.1 0H56.9C25.5 0 0 25.5 0 56.9v398.2C0 486.5 25.5 512 56.9 512" style="fill-rule:evenodd;clip-rule:evenodd;fill:#007ebb"/>
+              <path d="M440.9 440.9h-76V311.5c0-35.5-13.5-55.3-41.6-55.3-30.5 0-46.5 20.6-46.5 55.3v129.4h-73.2V194.4h73.2v33.2s22-40.7 74.3-40.7 89.7 31.9 89.7 98v156zM116.3 162.1c-24.9 0-45.2-20.4-45.2-45.5s20.2-45.5 45.2-45.5 45.1 20.4 45.1 45.5-20.2 45.5-45.1 45.5M78.5 440.9h76.4V194.4H78.5z" style="fill-rule:evenodd;clip-rule:evenodd;fill:#fff"/>
+            </symbol>
+            <symbol id="f-instagram" viewBox="0 0 512 512">
+              <defs><path id="ig-s" d="M256.1.1C149.2.1 118 .2 111.9.7 89.9 2.5 76.3 6 61.4 13.4 50 19.1 40.9 25.6 32 34.9 15.8 51.8 5.9 72.5 2.4 97.2.7 109.2.2 111.6.1 172.8V256c0 106.8.1 138 .6 144.1 1.8 21.3 5.1 34.8 12.2 49.5 13.5 28.1 39.4 49.2 69.9 57.1 10.6 2.7 22.2 4.2 37.2 4.9 6.3.3 71 .5 135.6.5s129.3-.1 135.5-.4c17.3-.8 27.4-2.2 38.5-5 30.7-7.9 56.1-28.7 69.9-57.2 7-14.3 10.5-28.3 12.1-48.5.3-4.4.5-74.7.5-144.9s-.2-140.4-.5-144.8c-1.6-20.6-5.1-34.4-12.3-49-5.9-12-12.4-20.9-21.9-30-16.9-16.2-37.6-26-62.3-29.6C403.1 1 400.8.5 339.6.4h-83.5z"/></defs>
+              <radialGradient id="ig-a" cx="-167.747" cy="-6.147" r="255.952" gradientTransform="matrix(0 -1.982 -1.8439 0 124.667 218.883)" gradientUnits="userSpaceOnUse"><stop offset="0" style="stop-color:#fd5"/><stop offset=".1" style="stop-color:#fd5"/><stop offset=".5" style="stop-color:#ff543e"/><stop offset="1" style="stop-color:#c837ab"/></radialGradient>
+              <radialGradient id="ig-b" cx="278.405" cy="166.356" r="255.952" gradientTransform="matrix(.1739 .8687 3.5818 -.7172 -730.042 -85.605)" gradientUnits="userSpaceOnUse"><stop offset="0" style="stop-color:#3771c8"/><stop offset=".128" style="stop-color:#3771c8"/><stop offset="1" style="stop-color:#60f;stop-opacity:0"/></radialGradient>
+              <use href="#ig-s" fill="url(#ig-a)"/>
+              <use href="#ig-s" fill="url(#ig-b)"/>
+              <path d="M256 67c-51.3 0-57.8.2-77.9 1.1s-33.9 4.1-45.9 8.8c-12.4 4.8-23 11.3-33.5 21.8s-17 21.1-21.8 33.5c-4.7 12-7.9 25.8-8.8 45.9-.9 20.2-1.1 26.6-1.1 77.9s.2 57.8 1.1 77.9 4.1 33.9 8.8 45.9c4.8 12.4 11.3 23 21.8 33.5s21 17 33.5 21.8c12 4.7 25.8 7.9 45.9 8.8 20.2.9 26.6 1.1 77.9 1.1s57.8-.2 77.9-1.1 33.9-4.1 45.9-8.8c12.4-4.8 23-11.3 33.5-21.8s17-21.1 21.8-33.5c4.6-12 7.8-25.8 8.8-45.9.9-20.2 1.1-26.6 1.1-77.9s-.2-57.8-1.1-77.9-4.1-33.9-8.8-45.9c-4.8-12.4-11.3-23-21.8-33.5s-21-17-33.5-21.8c-12-4.7-25.8-7.9-45.9-8.8-20.2-.9-26.6-1.1-77.9-1.1m-17 34.1h17c50.5 0 56.4.2 76.4 1.1 18.4.8 28.4 3.9 35.1 6.5 8.8 3.4 15.1 7.5 21.7 14.1s10.7 12.9 14.1 21.7c2.6 6.7 5.7 16.7 6.5 35.1.9 19.9 1.1 25.9 1.1 76.4s-.2 56.4-1.1 76.4c-.8 18.4-3.9 28.4-6.5 35.1-3.4 8.8-7.5 15.1-14.1 21.7s-12.9 10.7-21.7 14.1c-6.7 2.6-16.7 5.7-35.1 6.5-19.9.9-25.9 1.1-76.4 1.1s-56.5-.2-76.4-1.1c-18.4-.9-28.4-3.9-35.1-6.5-8.8-3.4-15.1-7.5-21.7-14.1s-10.7-12.9-14.1-21.7c-2.6-6.7-5.7-16.7-6.5-35.1-.9-19.9-1.1-25.9-1.1-76.4s.2-56.4 1.1-76.4c.8-18.4 3.9-28.4 6.5-35.1 3.4-8.8 7.5-15.1 14.1-21.7s12.9-10.7 21.7-14.1c6.7-2.6 16.7-5.7 35.1-6.5 17.4-.9 24.2-1.1 59.4-1.1m117.9 31.4c-12.5 0-22.7 10.1-22.7 22.7 0 12.5 10.2 22.7 22.7 22.7s22.7-10.2 22.7-22.7-10.2-22.8-22.7-22.7M256 159c-53.6 0-97.1 43.5-97.1 97.1s43.5 97 97.1 97 97-43.4 97-97-43.4-97.1-97-97.1m0 34c34.8 0 63 28.2 63 63s-28.2 63-63 63-63-28.2-63-63 28.2-63 63-63" style="fill:#fff"/>
+            </symbol>
+            <symbol id="f-youtube" viewBox="0 76.8 512 358.4">
+              <path d="M501.3 132.8c-5.9-22-23.2-39.4-45.3-45.3-39.9-10.7-200-10.7-200-10.7s-160.1 0-200 10.7c-22 5.9-39.4 23.2-45.3 45.3C0 172.7 0 256 0 256s0 83.3 10.7 123.2c5.9 22 23.2 39.4 45.3 45.3 39.9 10.7 200 10.7 200 10.7s160.1 0 200-10.7c22-5.9 39.4-23.2 45.3-45.3C512 339.3 512 256 512 256s0-83.3-10.7-123.2" style="fill:red"/>
+              <path d="m204.8 332.8 133-76.8-133-76.8z" style="fill:#fff"/>
+            </symbol>
+            <!-- Deux icones maison, dans le meme esprit : une enveloppe et un globe. -->
+            <symbol id="f-mail" viewBox="0 0 16 16">
+              <defs><linearGradient id="ml-a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#61c3fb"/><stop offset="1" stop-color="#1273ea"/></linearGradient></defs>
+              <rect x=".7" y="2.4" width="14.6" height="11.2" rx="3.1" fill="url(#ml-a)"/>
+              <g fill="none" stroke="#fff" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3.1" y="5" width="9.8" height="6" rx="1.5"/>
+                <path d="M3.5 5.6 8 8.9l4.5-3.3"/>
+              </g>
+            </symbol>
+            <symbol id="f-web" viewBox="0 0 16 16">
+              <defs><linearGradient id="wb-a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5bb8f5"/><stop offset="1" stop-color="#1667d6"/></linearGradient></defs>
+              <circle cx="8" cy="8" r="6.7" fill="url(#wb-a)"/>
+              <g fill="none" stroke="#fff" stroke-width="1">
+                <path d="M1.4 8h13.2"/>
+                <ellipse cx="8" cy="8" rx="3.1" ry="6.7"/>
+              </g>
+            </symbol>
+            <symbol id="t-overflow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.8 5.5 9.3 10 4.8 14.5"/>
+              <path d="M11 5.5 15.5 10 11 14.5"/>
+            </symbol>
+            <symbol id="t-search" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+              <circle cx="8.6" cy="8.6" r="5.9"/><path d="m13 13 4.6 4.6"/>
+            </symbol>
+            <!-- Liste -->
+            <symbol id="disc" viewBox="0 0 7 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m1.5 1.5 3.5 3.5-3.5 3.5"/></symbol>
+            <symbol id="sort-up" viewBox="0 0 10 7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m1.5 5.5 3.5-3.5 3.5 3.5"/></symbol>
+            <symbol id="f-folder" viewBox="0 0 16 16">
+              <path d="M1.3 3.6a1 1 0 0 1 1-1h3.7l1.4 1.5h6.3a1 1 0 0 1 1 1v8.2a1 1 0 0 1-1 1H2.3a1 1 0 0 1-1-1Z" fill="url(#folderBack)"/>
+              <path d="M1.3 6.1a1 1 0 0 1 1-1h11.4a1 1 0 0 1 1 1v7.2a1 1 0 0 1-1 1H2.3a1 1 0 0 1-1-1Z" fill="url(#folderFront)"/>
+              <path d="M1.3 6.1a1 1 0 0 1 1-1h11.4a1 1 0 0 1 1 1" fill="none" stroke="#a9d9fb" stroke-width=".5"/>
+            </symbol>
+            <symbol id="f-html" viewBox="0 0 16 16">
+              <path d="M3.4 1.2h6.2l3.3 3.3v10a.4.4 0 0 1-.4.4H3.4a.4.4 0 0 1-.4-.4V1.6a.4.4 0 0 1 .4-.4Z" fill="#f4f4f4"/>
+              <path d="M9.6 1.2v2.9a.4.4 0 0 0 .4.4h2.9" fill="#cfcfcf"/>
+              <path d="M5.6 4.4 4.5 5.4l1.1 1M7.6 4.4l1.1 1-1.1 1M7.2 3.9 6 6.9" fill="none" stroke="#a5a5a5" stroke-width=".55" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            <symbol id="f-js" viewBox="0 0 16 16">
+              <path d="M3.4 1.2h6.2l3.3 3.3v10a.4.4 0 0 1-.4.4H3.4a.4.4 0 0 1-.4-.4V1.6a.4.4 0 0 1 .4-.4Z" fill="#f4f4f4"/>
+              <path d="M9.6 1.2v2.9a.4.4 0 0 0 .4.4h2.9" fill="#cfcfcf"/>
+              <g fill="#9a9a9a">
+                <rect x="4.3" y="5.6" width="7.4" height=".6" rx=".3"/>
+                <rect x="4.3" y="7.1" width="6.2" height=".6" rx=".3"/>
+                <rect x="4.3" y="8.6" width="7.4" height=".6" rx=".3"/>
+                <rect x="4.3" y="10.1" width="5.2" height=".6" rx=".3"/>
+                <rect x="4.3" y="11.6" width="6.8" height=".6" rx=".3"/>
+              </g>
+            </symbol>
+            <symbol id="f-svg" viewBox="0 0 16 16">
+              <path d="M3.4 1.2h6.2l3.3 3.3v10a.4.4 0 0 1-.4.4H3.4a.4.4 0 0 1-.4-.4V1.6a.4.4 0 0 1 .4-.4Z" fill="#f4f4f4"/>
+              <path d="M9.6 1.2v2.9a.4.4 0 0 0 .4.4h2.9" fill="#cfcfcf"/>
+              <rect x="4.2" y="3.2" width="4.6" height="3.4" rx=".4" fill="#2c3550"/>
+              <rect x="4.2" y="7.6" width="7.6" height="1" rx=".3" fill="#5c7bd9"/>
+              <rect x="4.2" y="9.4" width="6" height=".8" rx=".3" fill="#bdbdbd"/>
+            </symbol>
+            <symbol id="f-png" viewBox="0 0 16 16">
+              <rect x="1" y="3.6" width="14" height="8.8" rx="1.2" fill="#f2f2f2"/>
+              <rect x="2" y="4.6" width="12" height="6.8" rx=".5" fill="#151515"/>
+              <rect x="3.6" y="6.6" width="8.8" height="2.8" rx="1.4" fill="none" stroke="#f2f2f2" stroke-width=".9"/>
+            </symbol>
+            <!-- Barre de chemin -->
+            <symbol id="p-hd" viewBox="0 0 12 12">
+              <path d="M1.2 7.2 2.6 3a.8.8 0 0 1 .8-.6h5.2a.8.8 0 0 1 .8.6l1.4 4.2v2.1a.8.8 0 0 1-.8.8H2a.8.8 0 0 1-.8-.8Z" fill="url(#hdd)"/>
+              <path d="M1.2 7.2h9.6" stroke="#6e6e6e" stroke-width=".5"/>
+            </symbol>
+            <symbol id="p-folder" viewBox="0 0 12 12">
+              <path d="M.8 2.6a.8.8 0 0 1 .8-.8h2.9l1 1.1h4.9a.8.8 0 0 1 .8.8v6.1a.8.8 0 0 1-.8.8H1.6a.8.8 0 0 1-.8-.8Z" fill="url(#folderBack)"/>
+              <path d="M.8 4.5a.8.8 0 0 1 .8-.8h8.8a.8.8 0 0 1 .8.8v5.3a.8.8 0 0 1-.8.8H1.6a.8.8 0 0 1-.8-.8Z" fill="url(#folderFront)"/>
+            </symbol>
+            <symbol id="p-home" viewBox="0 0 12 12">
+              <use href="#p-folder"/>
+              <path d="M4 7.6 6 5.9l2 1.7M4.6 7.1v2h2.8v-2" fill="none" stroke="#2f7fcb" stroke-width=".7" stroke-linejoin="round"/>
+            </symbol>
+            <symbol id="p-users" viewBox="0 0 12 12">
+              <use href="#p-folder"/>
+              <circle cx="6" cy="6.4" r=".9" fill="#2f7fcb"/>
+              <path d="M4.5 9a1.5 1.5 0 0 1 3 0" fill="#2f7fcb"/>
+            </symbol>
+            <symbol id="p-chev" viewBox="0 0 6 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="m1.5 1 3 3-3 3"/></symbol>
+          </defs>
+        </svg>
+
+        <!-- ================== Fenêtre ================== -->
+        <div class="finder">
+          <div class="window">
+
+            <div class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+
+            <!-- Toolbar -->
+            <div class="glass nav">
+              <svg class="ic" style="left:19px"><use href="#t-left"/></svg>
+              <span class="sep"></span>
+              <svg class="ic dim" style="left:54px"><use href="#t-right"/></svg>
+            </div>
+
+            <div class="title">public</div>
+
+            <div class="glass plus">
+              <svg class="ic" style="left:18px"><use href="#t-overflow"/></svg>
+            </div>
+
+            <div class="glass search">
+              <svg class="ic" style="left:18px"><use href="#t-search"/></svg>
+            </div>
+
+            <!-- En-têtes de colonnes -->
+            <div class="head">
+              <span class="h-name">Nom</span>
+              <svg class="sort" style="position:absolute;width:10px;height:7px"><use href="#sort-up"/></svg>
+              <span class="div" style="left:439px"></span>
+              <span class="h-size">Taille</span>
+              <span class="div" style="left:536px"></span>
+              <span class="h-type">Type</span>
+            </div>
+
+            <!-- Lignes -->
+            <div class="rows">
+
+              <button class="row dossier" type="button" aria-expanded="true" aria-controls="g-contact">
+                <svg class="disc"><use href="#disc"/></svg>
+                <svg class="ficon"><use href="#f-folder"/></svg>
+                <span class="name">Contact</span>
+              </button>
+              <div class="enfants" id="g-contact" style="--n:2">
+                <a class="row enfant" href="https://wa.me/33646262610" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-whatsapp"/></svg><span class="name">WhatsApp</span></a>
+                <a class="row enfant" href="mailto:theo@gouman.fr"><svg class="ficon"><use href="#f-mail"/></svg><span class="name">Mail</span></a>
+              </div>
+
+              <button class="row dossier" type="button" aria-expanded="true" aria-controls="g-medias">
+                <svg class="disc"><use href="#disc"/></svg>
+                <svg class="ficon"><use href="#f-folder"/></svg>
+                <span class="name">Médias</span>
+              </button>
+              <div class="enfants" id="g-medias" style="--n:3">
+                <a class="row enfant" href="https://www.linkedin.com/in/theogouman/" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-linkedin"/></svg><span class="name">LinkedIn</span></a>
+                <a class="row enfant" href="https://www.instagram.com/theo.gouman/" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-instagram"/></svg><span class="name">Instagram</span></a>
+                <a class="row enfant" href="https://youtube.com/@theogouman" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-youtube"/></svg><span class="name">YouTube</span></a>
+              </div>
+
+              <button class="row dossier" type="button" aria-expanded="true" aria-controls="g-offres">
+                <svg class="disc"><use href="#disc"/></svg>
+                <svg class="ficon"><use href="#f-folder"/></svg>
+                <span class="name">Offres</span>
+              </button>
+              <div class="enfants" id="g-offres" style="--n:2">
+                <a class="row enfant" href="https://www.consultant-notion.fr" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-web"/></svg><span class="name">Structurer son entreprise avec Notion</span></a>
+                <a class="row enfant" href="https://www.notionclub.fr" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-web"/></svg><span class="name">Devenir consultant Notion</span></a>
+              </div>
+
+            </div>
+
+            <!-- Barre de chemin -->
+            <div class="pathbar">
+              <span class="crumb"><svg><use href="#p-hd"/></svg>Macintosh HD</span>
+              <svg class="chev"><use href="#p-chev"/></svg>
+              <span class="crumb"><svg><use href="#p-users"/></svg>Utilisateurs</span>
+              <svg class="chev"><use href="#p-chev"/></svg>
+              <span class="crumb"><svg><use href="#p-home"/></svg>gouman</span>
+              <svg class="chev"><use href="#p-chev"/></svg>
+              <span class="crumb"><svg><use href="#p-folder"/></svg>Gouman.fr</span>
+              <svg class="chev"><use href="#p-chev"/></svg>
+              <span class="crumb"><svg><use href="#p-folder"/></svg>public</span>
+            </div>
+
+          </div>
+        </div>
+      <!-- finder:markup:end -->
+    </div>
+  </div>
+
+  <script>
+  /* Ouverture et fermeture de la fenetre Finder. Le genie fait l'animation
+     quand il le peut ; sinon les classes CSS suffisent a montrer et cacher. */
+  document.addEventListener("DOMContentLoaded", function () {
+    var dossier = document.querySelector(".dossier");
+    var bouton = document.getElementById("dossier-bouton");
+    var overlay = document.getElementById("finder-overlay");
+    var fenetre = overlay.querySelector(".finder-win");
+    var css = document.getElementById("finder-css").textContent;
+    var genie = window.createGenie ? window.createGenie({ duration: 620 }) : null;
+    var ouvert = false;
+
+    // La fenetre fait 449 x 319 : elle s'affiche a sa taille native, comme une
+    // vraie fenetre, et ne retrecit que si l'ecran est plus petit qu'elle.
+    // Jamais agrandie : les coordonnees sont en points macOS, les etirer
+    // trahirait le dessin.
+    function ajuster() {
+      var w = fenetre.offsetWidth, h = fenetre.offsetHeight;
+      if (w && h) {
+        var k = Math.min(
+          (window.innerWidth - 32) / w,
+          (window.innerHeight - 32) / h,
+          1
+        );
+        overlay.style.setProperty("--finder-k", k.toFixed(4));
+      }
+      var r = dossier.getBoundingClientRect();
+      bouton.style.left = r.left + "px";
+      bouton.style.top = r.top + "px";
+      bouton.style.width = r.width + "px";
+      bouton.style.height = r.height + "px";
+    }
+
+    function ouvrir() {
+      if (ouvert) return;
+      ouvert = true;
+      ajuster();
+      overlay.classList.add("ouvert");
+      overlay.removeAttribute("aria-hidden");
+      bouton.setAttribute("aria-expanded", "true");
+      if (!genie) return focaliser();
+      overlay.classList.add("anime");
+      genie.open(fenetre, dossier.getBoundingClientRect(), css).then(function () {
+        overlay.classList.remove("anime");
+        focaliser();
+      });
+    }
+
+    function fermer() {
+      if (!ouvert) return;
+      ouvert = false;
+      bouton.setAttribute("aria-expanded", "false");
+      function fin() {
+        overlay.classList.remove("ouvert", "anime");
+        overlay.setAttribute("aria-hidden", "true");
+        bouton.focus({ preventScroll: true });
+      }
+      if (!genie) return fin();
+      overlay.classList.add("anime");
+      // Le fond se dissipe pendant que le genie se resserre.
+      overlay.classList.remove("ouvert");
+      genie.close(fenetre, dossier.getBoundingClientRect(), css).then(fin);
+    }
+
+    // La fenetre est modale : le clavier doit y entrer a l'ouverture et
+    // retrouver le dossier a la fermeture.
+    function focaliser() {
+      var premier = fenetre.querySelector(".row");
+      if (premier) premier.focus({ preventScroll: true });
+    }
+
+    bouton.addEventListener("click", ouvrir);
+
+    // Les dossiers se replient au clic, comme dans le Finder. L'arborescence
+    // ayant change, la texture du genie ne vaut plus rien : on la refait une
+    // fois l'animation de repliement terminee.
+    var reprise;
+    fenetre.addEventListener("click", function (e) {
+      var d = e.target.closest(".dossier");
+      if (!d) return;
+      var ouvre = d.getAttribute("aria-expanded") === "false";
+      d.setAttribute("aria-expanded", ouvre);
+      // En repliant, le focus peut se retrouver sur un lien devenu invisible.
+      if (!ouvre && d.nextElementSibling.contains(document.activeElement)) {
+        d.focus({ preventScroll: true });
+      }
+      if (!genie) return;
+      genie.invalidate();
+      clearTimeout(reprise);
+      reprise = setTimeout(function () { genie.prime(fenetre, css); }, 400);
+    });
+
+    // Clic en dehors de la fenetre, et feu rouge de la barre de titre.
+    overlay.addEventListener("click", function (e) {
+      if (!fenetre.contains(e.target) || e.target.closest(".traffic .r")) fermer();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && ouvert) fermer();
+    });
+
+    // La fenetre se declare modale : le clavier doit y tourner en rond plutot
+    // que de repartir dans la page masquee derriere.
+    overlay.addEventListener("keydown", function (e) {
+      if (e.key !== "Tab") return;
+      var f = fenetre.querySelectorAll(".row");
+      // Les liens d'un dossier replie sont en visibility:hidden : le navigateur
+      // les saute deja, encore faut-il savoir lequel est vraiment le dernier.
+      f = Array.prototype.filter.call(f, function (el) {
+        return getComputedStyle(el).visibility !== "hidden";
+      });
+      if (!f.length) return;
+      var premier = f[0], dernier = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === premier) {
+        e.preventDefault();
+        dernier.focus();
+      } else if (!e.shiftKey && document.activeElement === dernier) {
+        e.preventDefault();
+        premier.focus();
+      }
+    });
+
+    var differe;
+    window.addEventListener("resize", function () {
+      if (genie) { genie.settle(); genie.invalidate(); }
+      ajuster();
+      clearTimeout(differe);
+      differe = setTimeout(function () {
+        if (genie && !ouvert) genie.prime(fenetre, css);
+      }, 250);
+    });
+
+    ajuster();
+    // Le bloc de texte change de hauteur quand SF Pro arrive, ce qui deplace
+    // les mains, donc le dossier : on recale le bouton a ce moment-la.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(ajuster);
+    }
+    window.addEventListener("load", ajuster);
+
+    // La texture est fabriquee au repos : le premier clic n'a plus rien a faire.
+    if (genie) {
+      var amorcer = function () { ajuster(); genie.prime(fenetre, css); };
+      if (window.requestIdleCallback) requestIdleCallback(amorcer, { timeout: 2500 });
+      else setTimeout(amorcer, 800);
+    }
+  });
+  </script>
 </body>
 </html>
