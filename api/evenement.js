@@ -12,7 +12,13 @@
 // Sans elles, la fonction repond 204 sans rien ecrire : le site continue de
 // fonctionner normalement, il ne se passe simplement rien.
 
-const { EVENEMENTS, VERSION_API } = require("./schema.js");
+const { EVENEMENTS, PROPRIETES, VERSION_API } = require("./schema.js");
+
+// Le type de chaque propriete tel qu'on l'a creee. Il ne sert que de repli :
+// c'est le schema reel de la base qui fait foi, voir typesDeLaBase().
+const TYPES_PAR_DEFAUT = Object.fromEntries(
+  Object.entries(PROPRIETES).map(([nom, definition]) => [nom, Object.keys(definition)[0]])
+);
 
 function corpsJson(req) {
   if (!req.body) return {};
@@ -52,8 +58,78 @@ function appareil(req) {
   return /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(ua) ? "Mobile" : "Desktop";
 }
 
-function texte(valeur) {
-  return { rich_text: valeur ? [{ text: { content: String(valeur).slice(0, 2000) } }] : [] };
+function entetes(jeton) {
+  return {
+    Authorization: `Bearer ${jeton}`,
+    "Notion-Version": VERSION_API,
+    "Content-Type": "application/json",
+  };
+}
+
+// Le schema reel de la base, relu une fois par instance.
+//
+// C'est le coeur de l'affaire : la base vit dans Notion, ou ses colonnes se
+// changent d'un clic. Ecrire en supposant leurs types, c'est accepter qu'une
+// retouche faite la-bas casse l'ecriture ici - et en silence, puisque seul le
+// journal de Vercel le dirait. On demande donc a Notion ce qu'elle attend.
+let schemaConnu = null;
+
+async function typesDeLaBase(jeton, base) {
+  if (schemaConnu) return schemaConnu;
+  try {
+    const r = await fetch(`https://api.notion.com/v1/databases/${base}`, {
+      headers: entetes(jeton),
+    });
+    if (!r.ok) return null;
+    const d = await r.json();
+    schemaConnu = Object.fromEntries(
+      Object.entries(d.properties || {}).map(([nom, p]) => [nom, p.type])
+    );
+    return schemaConnu;
+  } catch (e) {
+    return null;
+  }
+}
+
+function valeur(type, brut) {
+  const vide = brut === null || brut === undefined || brut === "";
+  switch (type) {
+    case "title":
+      return { title: vide ? [] : [{ text: { content: String(brut).slice(0, 2000) } }] };
+    case "select":
+      return { select: vide ? null : { name: String(brut).slice(0, 100) } };
+    case "multi_select":
+      return { multi_select: vide ? [] : [{ name: String(brut).slice(0, 100) }] };
+    case "status":
+      return { status: vide ? null : { name: String(brut).slice(0, 100) } };
+    case "url":
+      return { url: vide ? null : String(brut) };
+    case "date":
+      return { date: vide ? null : { start: String(brut) } };
+    case "number":
+      return { number: vide ? null : Number(brut) };
+    default:
+      return { rich_text: vide ? [] : [{ text: { content: String(brut).slice(0, 2000) } }] };
+  }
+}
+
+function proprietes(valeurs, types) {
+  const sortie = {};
+  // Le titre se reconnait a son type, pas a son nom : renommer la colonne dans
+  // Notion ne doit pas suffire a perdre le libelle.
+  const nomDuTitre = types
+    ? Object.keys(types).find((n) => types[n] === "title")
+    : "Événement";
+
+  for (const [nom, brut] of Object.entries(valeurs)) {
+    const estLeTitre = TYPES_PAR_DEFAUT[nom] === "title";
+    const cible = estLeTitre ? nomDuTitre || nom : nom;
+    // Une colonne absente de la base est passee sous silence : mieux vaut une
+    // ligne incomplete qu'aucune ligne.
+    if (types && !(cible in types)) continue;
+    sortie[cible] = valeur(types ? types[cible] : TYPES_PAR_DEFAUT[nom], brut);
+  }
+  return sortie;
 }
 
 module.exports = async function (req, res) {
@@ -76,33 +152,30 @@ module.exports = async function (req, res) {
     return;
   }
 
-  const ville = entete(req, "x-vercel-ip-city");
-  const pays = entete(req, "x-vercel-ip-country");
+  const valeurs = {
+    "Événement": evenement.titre,
+    "Date": new Date().toISOString(),
+    "Adresse IP": adresse(req),
+    "Ville": entete(req, "x-vercel-ip-city"),
+    "Pays": entete(req, "x-vercel-ip-country"),
+    "Appareil": appareil(req),
+    "URL": evenement.url,
+  };
 
   try {
+    const types = await typesDeLaBase(jeton, base);
     const reponse = await fetch("https://api.notion.com/v1/pages", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${jeton}`,
-        "Notion-Version": VERSION_API,
-        "Content-Type": "application/json",
-      },
+      headers: entetes(jeton),
       body: JSON.stringify({
         parent: { database_id: base },
-        properties: {
-          "Événement": { title: [{ text: { content: evenement.titre } }] },
-          Date: { date: { start: new Date().toISOString() } },
-          "Adresse IP": texte(adresse(req)),
-          Ville: texte(ville),
-          Pays: texte(pays),
-          Appareil: { select: { name: appareil(req) } },
-          URL: { url: evenement.url },
-        },
+        properties: proprietes(valeurs, types),
       }),
     });
     if (!reponse.ok) {
-      // On trace dans les journaux Vercel, mais on ne fait jamais echouer la
-      // page du visiteur pour un probleme de journalisation.
+      // Le schema a peut-etre change depuis la derniere lecture : on l'oublie,
+      // la prochaine visite le relira.
+      schemaConnu = null;
       console.error("Notion a refuse l'ecriture :", reponse.status, await reponse.text());
     }
   } catch (e) {

@@ -27,7 +27,10 @@ const PROPRIETES = {
   "Date": { date: {} },
   "Adresse IP": { rich_text: {} },
   "Ville": { rich_text: {} },
-  "Pays": { rich_text: {} },
+  // Pays est une selection : les codes ISO sont peu nombreux et se pretent aux
+  // etiquettes colorees. Notion cree l'option toute seule a la premiere visite
+  // depuis un pays inconnu.
+  "Pays": { select: { options: [] } },
   "Appareil": {
     select: {
       options: [
