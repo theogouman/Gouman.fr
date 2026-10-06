@@ -1123,14 +1123,15 @@
     }, true);
     document.addEventListener("pointerdown", function () { auClavier = false; }, true);
 
-    // La fenetre est dessinee en points macOS : 449 x 319. Elle garde cette
-    // taille sur un ecran de reference, retrecit si l'ecran est plus petit, et
-    // grandit a proportion s'il est plus grand. Cette derniere regle n'est pas
-    // un luxe : sans elle, la fenetre serait deux fois plus petite a l'ecran
-    // des que le navigateur est a 50 % de zoom, puisque ses 449 points sont des
-    // pixels CSS. Le reste de la page etant en vw, elle y est maintenant
-    // accordee.
-    var LARGEUR_REFERENCE = 1512;
+    // La fenetre est dessinee en points macOS : 449 x 319. A l'ecran, elle
+    // occupe une part fixe de la place disponible - la moitie de la largeur,
+    // au plus 72 % de la hauteur. Exprimer sa taille ainsi plutot qu'en pixels
+    // la rend insensible au zoom du navigateur, exactement comme le reste de
+    // la page : 449 points sont des pixels CSS, et un pixel CSS ne vaut qu'un
+    // demi pixel d'ecran a 50 % de zoom. Sa taille a l'ecran est donc la meme,
+    // toujours, quels que soient le zoom et la resolution.
+    var PART_LARGEUR = 0.5;
+    var PART_HAUTEUR = 0.72;
     function ajuster() {
       // Sur un petit ecran les lignes de la liste s'epaississent : la maquette
       // ne peut pas porter de media query, c'est donc ici que la bascule se
@@ -1153,11 +1154,13 @@
 
       var w = fenetre.offsetWidth, h = fenetre.offsetHeight;
       if (w && h) {
-        var k = Math.min(
-          (window.innerWidth - 32) / w,
-          (hDispo - 32) / h,
-          Math.max(1, window.innerWidth / LARGEUR_REFERENCE)
+        // La taille voulue, jamais sous l'echelle 1 : sur un petit ecran c'est
+        // la place disponible qui commande, pas la proportion.
+        var vise = Math.max(
+          1,
+          Math.min((PART_LARGEUR * window.innerWidth) / w, (PART_HAUTEUR * hDispo) / h)
         );
+        var k = Math.min((window.innerWidth - 32) / w, (hDispo - 32) / h, vise);
         // L'echelle est arrondie vers le bas pour qu'une ligne de la liste
         // couvre un nombre entier de pixels de l'ecran. Sans cela la trame
         // zebree et les icones tombent entre deux pixels : elles scintillent
