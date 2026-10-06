@@ -387,11 +387,12 @@
       --haut-dispo: calc(100dvh - var(--mains-h) - var(--bas) - 2 * var(--haut));
       /* Largeur commune au titre et a l'accroche : bornee par la largeur de
          l'ecran, par un maximum, et par la hauteur qui reste au-dessus des
-         mains. Le maximum de 480px est la taille retenue : c'est exactement
-         ce que donnait la page a 50 % de zoom navigateur, ou seul ce plafond
-         changeait de valeur physique. Mesure sur un 1440 x 900 : le bloc
-         passait de 757 a 480 px, les mains ne bougeaient pas. */
-      --bloc: min(68.80vw, 480px, calc(var(--haut-dispo) * 3.3));
+         mains. Ce plafond est le seul terme du min() dont la valeur physique
+         change avec le zoom du navigateur : c'est donc lui, et lui seul, qui
+         reglait la taille du texte quand on dezoomait. Sur un 1440 x 900 le
+         bloc valait 757px sans plafond, 643 au cran 67 % et 480 au cran 50 %.
+         640 est l'entre-deux retenu. */
+      --bloc: min(68.80vw, 640px, calc(var(--haut-dispo) * 3.3));
       height: 100vh;
       height: 100dvh;
       padding-bottom: var(--bas);
