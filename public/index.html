@@ -308,12 +308,8 @@
       /* Pleine largeur : la hauteur des mains en decoule, et c'est le titre qui
          cede la place. Le plafond ne mord que sur les fenetres tres plates
          (au-dela de 1.88:1), ou les mains retrecissent au lieu d'etre rognees. */
-      /* Coefficient de taille des mains : 1 sur grand ecran. Le SVG est en
-         « meet », alors reduire la hauteur de la boite reduit le dessin
-         entier, centre et toujours pose sur le bas. */
-      --mains-k: 1;
-      --mains-h: calc(min(41.5757vw, 78vh) * var(--mains-k));
-      --mains-h: calc(min(41.5757vw, 78dvh) * var(--mains-k));
+      --mains-h: min(41.5757vw, 78vh);
+      --mains-h: min(41.5757vw, 78dvh);
       --haut: clamp(20px, 2.5vh, 48px);
       --haut: clamp(20px, 2.5dvh, 48px);
       --haut-dispo: calc(100vh - var(--mains-h) - var(--bas) - 2 * var(--haut));
@@ -470,19 +466,20 @@
       outline-offset: 6px;
     }
 
-    /* Sur mobile les mains rendent 8 % de leur hauteur et le dossier gagne
-       autant a l'ecran : l'illustration respire et la cible du doigt grandit.
-       Le dossier etant dessine dans le SVG des mains, deja reduit de 8 %, il
-       lui faut 1.08 / 0.92 en coordonnees locales pour gagner ses 8 % a
-       l'ecran. fill-box cale l'agrandissement sur le centre de l'image, pas
-       sur celui du viewBox. */
-    .dossier {
+    /* Sur mobile le dossier gagne 8 %, pour que la cible du doigt soit plus
+       large. Les mains, elles, gardent leur taille : elles touchent les deux
+       bords de l'ecran et le SVG est en « meet », donc toute reduction de la
+       boite les decollerait des bords.
+       Le nom de la classe ne tient pas du detail : les lignes-dossiers du
+       Finder portent elles aussi « dossier », une regle non qualifiee les
+       attraperait. fill-box cale l'agrandissement sur le centre de l'image,
+       pas sur celui du viewBox. */
+    .dossier-ascii {
       transform-box: fill-box;
       transform-origin: 50% 50%;
     }
     @media (max-width: 700px) {
-      .scene { --mains-k: 0.92; }
-      .dossier { transform: scale(1.1739); }
+      .dossier-ascii { transform: scale(1.08); }
     }
 
     /* ---------- La fenetre Finder ---------- */
@@ -707,7 +704,7 @@
       <!-- Le dossier, pose dans l'intervalle entre les deux index. Le cadre de
            Folder.svg porte une marge interne (le dessin occupe 32..972 sur
            1004), d'ou les dimensions un peu plus grandes que l'ecart lui-meme. -->
-      <image class="dossier" href="Folder.svg"
+      <image class="dossier-ascii" href="Folder.svg"
              x="1961.0" y="3774.0" width="320.0" height="272.2"/>
       </svg>
     </div>
@@ -901,7 +898,7 @@
   /* Ouverture et fermeture de la fenetre Finder. Le genie fait l'animation
      quand il le peut ; sinon les classes CSS suffisent a montrer et cacher. */
   document.addEventListener("DOMContentLoaded", function () {
-    var dossier = document.querySelector(".dossier");
+    var dossier = document.querySelector(".dossier-ascii");
     var bouton = document.getElementById("dossier-bouton");
     var overlay = document.getElementById("finder-overlay");
     var fenetre = overlay.querySelector(".finder-win");
