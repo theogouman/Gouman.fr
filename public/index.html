@@ -362,13 +362,17 @@
       --haut-dispo: calc(100vh - var(--mains-h) - var(--bas) - 2 * var(--haut));
       --haut-dispo: calc(100dvh - var(--mains-h) - var(--bas) - 2 * var(--haut));
       /* Largeur commune au titre et a l'accroche : bornee par la largeur de
-         l'ecran, par un maximum, et par la hauteur qui reste au-dessus des
-         mains. Ce plafond est le seul terme du min() dont la valeur physique
-         change avec le zoom du navigateur : c'est donc lui, et lui seul, qui
-         reglait la taille du texte quand on dezoomait. Sur un 1440 x 900 le
-         bloc valait 757px sans plafond, 643 au cran 67 % et 480 au cran 50 %.
-         640 est l'entre-deux retenu. */
-      --bloc: min(68.80vw, 640px, calc(var(--haut-dispo) * 3.3));
+         l'ecran, par la hauteur qui reste au-dessus des mains, et par un
+         plafond.
+
+         Ce plafond etait en pixels, et c'etait l'erreur : un pixel CSS vaut un
+         demi pixel d'ecran quand le navigateur est a 50 % de zoom. Tout le
+         reste de la scene est en vw et en dvh, donc insensible au zoom ; le
+         plafond, lui, retrecissait de moitie et le titre avec. 31.4vw est la
+         proportion validee, relevee sur la page telle qu'elle etait vue. Le
+         plancher de 420px ne sert qu'aux fenetres etroites, ou c'est 68.80vw
+         qui borne de toute facon. */
+      --bloc: min(68.80vw, max(31.4vw, 420px), calc(var(--haut-dispo) * 3.3));
       height: 100vh;
       height: 100dvh;
       padding-bottom: var(--bas);
@@ -557,15 +561,15 @@
       animation-delay: var(--r);
     }
     @keyframes tour {
-      0%     { cx: 1952.1px; cy: 3714.5px; }
-      12.5%  { cx: 2121.0px; cy: 3696.8px; }
-      25%    { cx: 2289.9px; cy: 3714.5px; }
-      37.5%  { cx: 2334.3px; cy: 3910.1px; }
-      50%    { cx: 2289.9px; cy: 4105.7px; }
-      62.5%  { cx: 2121.0px; cy: 4123.4px; }
-      75%    { cx: 1952.1px; cy: 4105.7px; }
-      87.5%  { cx: 1907.7px; cy: 3910.1px; }
-      100%   { cx: 1952.1px; cy: 3714.5px; }
+      0%     { cx: 1965.1px; cy: 3729.6px; }
+      12.5%  { cx: 2121.0px; cy: 3713.2px; }
+      25%    { cx: 2276.9px; cy: 3729.6px; }
+      37.5%  { cx: 2317.9px; cy: 3910.1px; }
+      50%    { cx: 2276.9px; cy: 4090.6px; }
+      62.5%  { cx: 2121.0px; cy: 4107.0px; }
+      75%    { cx: 1965.1px; cy: 4090.6px; }
+      87.5%  { cx: 1924.1px; cy: 3910.1px; }
+      100%   { cx: 1965.1px; cy: 3729.6px; }
     }
 
     /* ---------- La fenetre Finder ---------- */
@@ -799,7 +803,7 @@
            transparent : son retard eventuel ne se voit pas. -->
       <g class="dossier-ascii">
         <defs>
-          <linearGradient id="pl-verre" x1="2036.6" y1="3687.9" x2="2205.4" y2="4132.3" gradientUnits="userSpaceOnUse">
+          <linearGradient id="pl-verre" x1="2043.1" y1="3705.0" x2="2198.9" y2="4115.2" gradientUnits="userSpaceOnUse">
             <stop stop-color="#FFFFFF" stop-opacity=".46"/>
             <stop offset="1" stop-color="#CEE3F8" stop-opacity=".2"/>
           </linearGradient>
@@ -812,32 +816,32 @@
             <stop offset="0" stop-color="#4FA6EC" stop-opacity=".42"/>
             <stop offset="1" stop-color="#4FA6EC" stop-opacity="0"/>
           </radialGradient>
-          <linearGradient id="pl-eclat" x1="2058.8" y1="3687.9" x2="2343.2" y2="3847.9" gradientUnits="userSpaceOnUse">
+          <linearGradient id="pl-eclat" x1="2063.6" y1="3705.0" x2="2326.1" y2="3852.7" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
             <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".8"/>
             <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
           </linearGradient>
           <clipPath id="pl-coupe">
-            <rect x="1898.78" y="3687.88" width="444.44" height="444.44" rx="102.22"/>
+            <rect x="1915.87" y="3704.97" width="410.26" height="410.26" rx="94.36"/>
           </clipPath>
         </defs>
 
-        <rect class="dossier-plaque" x="1898.78" y="3687.88" width="444.44" height="444.44" rx="102.22" fill="url(#pl-verre)"/>
+        <rect class="dossier-plaque" x="1915.87" y="3704.97" width="410.26" height="410.26" rx="94.36" fill="url(#pl-verre)"/>
 
         <!-- La lumiere : quatre halos qui font le tour du contour, chacun a sa
              vitesse. Leurs tours ne retombent jamais en phase. -->
         <g clip-path="url(#pl-coupe)" opacity=".75">
-          <rect x="1898.78" y="3687.88" width="444.44" height="444.44" fill="url(#pl-assise)"/>
-        <circle class="pl-feu" r="275.6" cx="2121.0" cy="3910.1" opacity=".40" style="--t:11s;--r:-0.4s"/>
-        <circle class="pl-feu" r="222.2" cx="2121.0" cy="3910.1" opacity=".32" style="--t:17s;--r:-3.2s"/>
-        <circle class="pl-feu" r="328.9" cx="2121.0" cy="3910.1" opacity=".36" style="--t:23s;--r:-10.8s"/>
-        <circle class="pl-feu" r="186.7" cx="2121.0" cy="3910.1" opacity=".28" style="--t:13s;--r:-9.2s"/>
+          <rect x="1915.87" y="3704.97" width="410.26" height="410.26" fill="url(#pl-assise)"/>
+          <circle class="pl-feu" r="254.4" cx="2121.0" cy="3910.1" opacity=".40" style="--t:11s;--r:-0.4s"/>
+          <circle class="pl-feu" r="205.1" cx="2121.0" cy="3910.1" opacity=".32" style="--t:17s;--r:-3.2s"/>
+          <circle class="pl-feu" r="303.6" cx="2121.0" cy="3910.1" opacity=".36" style="--t:23s;--r:-10.8s"/>
+          <circle class="pl-feu" r="172.3" cx="2121.0" cy="3910.1" opacity=".28" style="--t:13s;--r:-9.2s"/>
         </g>
 
         <!-- Le lisere complet, puis l'eclat, limite au coin superieur droit. -->
-        <rect x="1898.78" y="3687.88" width="444.44" height="444.44" rx="102.22"
+        <rect x="1915.87" y="3704.97" width="410.26" height="410.26" rx="94.36"
               fill="none" stroke="#FFFFFF" stroke-opacity=".18" stroke-width="1" vector-effect="non-scaling-stroke"/>
-        <path d="M2085.4 3687.88H2241.00A102.22 102.22 0 0 1 2343.22 3790.10V3963.4"
+        <path d="M2088.2 3704.97H2231.77A94.36 94.36 0 0 1 2326.13 3799.33V3959.3"
               fill="none" stroke="url(#pl-eclat)" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
 
         <g transform="translate(1961.0 3774.0) scale(0.318725)">
@@ -1075,10 +1079,14 @@
     }, true);
     document.addEventListener("pointerdown", function () { auClavier = false; }, true);
 
-    // La fenetre fait 449 x 319 : elle s'affiche a sa taille native, comme une
-    // vraie fenetre, et ne retrecit que si l'ecran est plus petit qu'elle.
-    // Jamais agrandie : les coordonnees sont en points macOS, les etirer
-    // trahirait le dessin.
+    // La fenetre est dessinee en points macOS : 449 x 319. Elle garde cette
+    // taille sur un ecran de reference, retrecit si l'ecran est plus petit, et
+    // grandit a proportion s'il est plus grand. Cette derniere regle n'est pas
+    // un luxe : sans elle, la fenetre serait deux fois plus petite a l'ecran
+    // des que le navigateur est a 50 % de zoom, puisque ses 449 points sont des
+    // pixels CSS. Le reste de la page etant en vw, elle y est maintenant
+    // accordee.
+    var LARGEUR_REFERENCE = 1512;
     function ajuster() {
       // Sur un petit ecran les lignes de la liste s'epaississent : la maquette
       // ne peut pas porter de media query, c'est donc ici que la bascule se
@@ -1104,7 +1112,7 @@
         var k = Math.min(
           (window.innerWidth - 32) / w,
           (hDispo - 32) / h,
-          1
+          Math.max(1, window.innerWidth / LARGEUR_REFERENCE)
         );
         // L'echelle est arrondie vers le bas pour qu'une ligne de la liste
         // couvre un nombre entier de pixels de l'ecran. Sans cela la trame
