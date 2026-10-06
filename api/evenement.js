@@ -12,19 +12,7 @@
 // Sans elles, la fonction repond 204 sans rien ecrire : le site continue de
 // fonctionner normalement, il ne se passe simplement rien.
 
-// Le libelle n'est jamais celui que le navigateur envoie, seulement une cle
-// qu'on y retrouve. Sans cela, n'importe qui pourrait ecrire ce qu'il veut
-// dans la base en appelant l'adresse a la main.
-const EVENEMENTS = {
-  site: { titre: "A ouvert le site", url: null },
-  whatsapp: { titre: "A ouvert WhatsApp", url: "https://wa.me/33646262610" },
-  mail: { titre: "A ouvert le mail", url: "mailto:theo@gouman.fr" },
-  linkedin: { titre: "A ouvert LinkedIn", url: "https://www.linkedin.com/in/theogouman/" },
-  instagram: { titre: "A ouvert Instagram", url: "https://www.instagram.com/theo.gouman/" },
-  youtube: { titre: "A ouvert YouTube", url: "https://youtube.com/@theogouman" },
-  formation: { titre: "A ouvert la formation Notion", url: "https://www.consultant-notion.fr" },
-  club: { titre: "A ouvert le Notion Club", url: "https://www.notionclub.fr" },
-};
+const { EVENEMENTS, VERSION_API } = require("./schema.js");
 
 function corpsJson(req) {
   if (!req.body) return {};
@@ -96,7 +84,7 @@ module.exports = async function (req, res) {
       method: "POST",
       headers: {
         Authorization: `Bearer ${jeton}`,
-        "Notion-Version": "2022-06-28",
+        "Notion-Version": VERSION_API,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
