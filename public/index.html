@@ -1013,8 +1013,8 @@
                 <span class="name">Contact</span>
               </button>
               <div class="enfants" id="g-contact" style="--n:2">
-                <a class="row enfant" href="https://wa.me/33646262610" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-whatsapp"/></svg><span class="name">WhatsApp</span></a>
-                <a class="row enfant" href="mailto:theo@gouman.fr"><svg class="ficon"><use href="#f-mail"/></svg><span class="name">Mail</span></a>
+                <a class="row enfant" href="https://wa.me/33646262610" data-evenement="whatsapp" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-whatsapp"/></svg><span class="name">WhatsApp</span></a>
+                <a class="row enfant" href="mailto:theo@gouman.fr" data-evenement="mail"><svg class="ficon"><use href="#f-mail"/></svg><span class="name">Mail</span></a>
               </div>
 
               <button class="row dossier" type="button" aria-expanded="true" aria-controls="g-medias">
@@ -1023,9 +1023,9 @@
                 <span class="name">Médias</span>
               </button>
               <div class="enfants" id="g-medias" style="--n:3">
-                <a class="row enfant" href="https://www.linkedin.com/in/theogouman/" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-linkedin"/></svg><span class="name">LinkedIn</span></a>
-                <a class="row enfant" href="https://www.instagram.com/theo.gouman/" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-instagram"/></svg><span class="name">Instagram</span></a>
-                <a class="row enfant" href="https://youtube.com/@theogouman" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-youtube"/></svg><span class="name">YouTube</span></a>
+                <a class="row enfant" href="https://www.linkedin.com/in/theogouman/" data-evenement="linkedin" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-linkedin"/></svg><span class="name">LinkedIn</span></a>
+                <a class="row enfant" href="https://www.instagram.com/theo.gouman/" data-evenement="instagram" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-instagram"/></svg><span class="name">Instagram</span></a>
+                <a class="row enfant" href="https://youtube.com/@theogouman" data-evenement="youtube" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-youtube"/></svg><span class="name">YouTube</span></a>
               </div>
 
               <button class="row dossier" type="button" aria-expanded="true" aria-controls="g-offres">
@@ -1034,8 +1034,8 @@
                 <span class="name">Offres</span>
               </button>
               <div class="enfants" id="g-offres" style="--n:2">
-                <a class="row enfant" href="https://www.consultant-notion.fr" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-web"/></svg><span class="name">Structurer son entreprise avec Notion</span></a>
-                <a class="row enfant" href="https://www.notionclub.fr" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-web"/></svg><span class="name">Devenir consultant Notion</span></a>
+                <a class="row enfant" href="https://www.consultant-notion.fr" data-evenement="formation" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-web"/></svg><span class="name">Structurer son entreprise avec Notion</span></a>
+                <a class="row enfant" href="https://www.notionclub.fr" data-evenement="club" target="_blank" rel="noopener noreferrer"><svg class="ficon"><use href="#f-web"/></svg><span class="name">Devenir consultant Notion</span></a>
               </div>
 
               <p class="vide">Aucun résultat</p>
@@ -1058,6 +1058,50 @@
   </div>
 
   <script>
+  /* ---------- Journal des visites ----------
+     Une ligne dans Notion a l'ouverture du site, une par lien suivi. Le
+     navigateur n'envoie qu'une cle ; c'est /api/evenement qui en fait un
+     libelle, et qui y joint l'adresse IP, la ville et l'appareil - des choses
+     que lui seul sait, et qu'on ne peut donc pas lui faire dire.
+
+     sendBeacon plutot que fetch : la requete part meme si la page se ferme
+     dans la foulee, et elle ne retarde jamais l'ouverture du lien. */
+  (function () {
+    function signaler(cle) {
+      var corps = JSON.stringify({ evenement: cle });
+      try {
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(
+            "/api/evenement",
+            new Blob([corps], { type: "application/json" })
+          );
+          return;
+        }
+        fetch("/api/evenement", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: corps,
+          keepalive: true,
+        }).catch(function () {});
+      } catch (e) {
+        // Le journal ne doit jamais abimer la page.
+      }
+    }
+
+    signaler("site");
+
+    // En capture : le compte est pris avant que le navigateur ne parte suivre
+    // le lien.
+    document.addEventListener(
+      "click",
+      function (e) {
+        var lien = e.target.closest ? e.target.closest("a[data-evenement]") : null;
+        if (lien) signaler(lien.getAttribute("data-evenement"));
+      },
+      true
+    );
+  })();
+
   /* Ouverture et fermeture de la fenetre Finder. Le genie fait l'animation
      quand il le peut ; sinon les classes CSS suffisent a montrer et cacher. */
   document.addEventListener("DOMContentLoaded", function () {
