@@ -10,6 +10,7 @@
 // la base en appelant l'adresse a la main.
 const EVENEMENTS = {
   site: { titre: "A ouvert le site", url: null },
+  dossier: { titre: "A ouvert le dossier", url: null },
   whatsapp: { titre: "A ouvert WhatsApp", url: "https://wa.me/33646262610" },
   mail: { titre: "A ouvert le mail", url: "mailto:theo@gouman.fr" },
   linkedin: { titre: "A ouvert LinkedIn", url: "https://www.linkedin.com/in/theogouman/" },

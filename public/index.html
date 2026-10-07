@@ -871,7 +871,7 @@
   </div>
 
   <!-- La cible de clic, calee sur la plaque dessinee dans l'illustration. -->
-  <button class="dossier-bouton" id="dossier-bouton"
+  <button class="dossier-bouton" id="dossier-bouton" data-evenement="dossier"
           aria-haspopup="dialog" aria-expanded="false" aria-controls="finder-overlay">
     <span class="visuellement-cache">Ouvrir le dossier public</span>
   </button>
@@ -1059,7 +1059,8 @@
 
   <script>
   /* ---------- Journal des visites ----------
-     Une ligne dans Notion a l'ouverture du site, une par lien suivi. Le
+     Une ligne dans Notion a l'ouverture du site, une a l'ouverture du dossier,
+     une par lien suivi. Le
      navigateur n'envoie qu'une cle ; c'est /api/evenement qui en fait un
      libelle, et qui y joint l'adresse IP, la ville et l'appareil - des choses
      que lui seul sait, et qu'on ne peut donc pas lui faire dire.
@@ -1091,12 +1092,13 @@
     signaler("site");
 
     // En capture : le compte est pris avant que le navigateur ne parte suivre
-    // le lien.
+    // le lien. Les liens du Finder et le dossier qui l'ouvre portent tous
+    // data-evenement.
     document.addEventListener(
       "click",
       function (e) {
-        var lien = e.target.closest ? e.target.closest("a[data-evenement]") : null;
-        if (lien) signaler(lien.getAttribute("data-evenement"));
+        var cible = e.target.closest ? e.target.closest("[data-evenement]") : null;
+        if (cible) signaler(cible.getAttribute("data-evenement"));
       },
       true
     );
